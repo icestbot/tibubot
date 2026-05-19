@@ -10,7 +10,6 @@ st.set_page_config(
 )
 
 # --- INYECCIÓN DE CSS PERSONALIZADO (IDENTIDAD CORPORATIVA ICEST) ---
-# Usamos azul marino institucional (#002b49), acentos dorados (#d4af37) y fondos limpios
 st.markdown("""
 <style>
     /* Estilizar barra superior de Streamlit y fondo */
@@ -77,12 +76,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- CLAVE API OCULTA ---
-# Ingresa aquí tu API key real para que el bot empiece activado el día de la expo
-# De este modo la barra de configuración desaparece y se ve 100% profesional
-API_KEY_EXPO = "TU_GEMINI_API_KEY_AQUÍ" 
+# --- CLAVE API LEYENDO DESDE STREAMLIT SECRETS ---
+# 👇 CAMBIAMOS ESTA LÍNEA PARA QUE BUSQUE EN LA BÓVEDA OCULTA
+API_KEY_EXPO = st.secrets["API_KEY_EXPO"] 
 
-# --- BASE DE DATOS DE CONOCIMIENTOS (AQUÍ ESCRIBES TODO DETALLADO) ---
+# --- BASE DE DATOS DE CONOCIMIENTOS ---
 HISTORIA_ICEST = """
 El Instituto de Ciencias y Estudios Superiores de Tamaulipas (ICEST) fue fundado el 16 de abril de 1979 por el visionario y Rector Emérito, Lic. Carlos L. Dorantes del Rosal, D.E.
 El ICEST nació originalmente ofreciendo bachillerato y carreras técnicas comerciales. Con el tiempo se expandió para ofrecer licenciaturas, ingenierías y posgrados de excelente calidad.
@@ -113,12 +111,12 @@ if "messages" not in st.session_state:
         {"role": "assistant", "content": "¡Hola! 🤖 Soy Robot-ICEST. Fui programado para esta expo de robótica para contarte todo sobre nuestra increíble escuela. ¿Quieres que te cuente un dato curioso, la historia o dónde están los campus?"}
     ]
 
-# Mostrar historial de conversación con el estilo personalizado aplicado
+# Mostrar historial de conversación
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# --- SECCIÓN DE BOTONES RÁPIDOS (PARA EVITAR ESCRIBIR) ---
+# --- SECCIÓN DE BOTONES RÁPIDOS ---
 st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
 col1, col2, col3 = st.columns(3)
 
@@ -137,27 +135,22 @@ with col3:
 # Lógica si presionaron un botón sugerido
 if pregunta_sugerida:
     st.session_state.messages.append({"role": "user", "content": pregunta_sugerida})
-    # Ejecutamos de inmediato
     user_input_active = pregunta_sugerida
 else:
-    # Si no presionaron botón, esperamos a la barra de texto
     user_input_active = st.chat_input("Pregúntale algo a Robot-ICEST...")
 
 # --- PROCESAMIENTO E INTERACCIÓN CON GEMINI ---
 if user_input_active:
-    # Si no venía de un botón rápido, lo mostramos en pantalla
     if not pregunta_sugerida:
         st.session_state.messages.append({"role": "user", "content": user_input_active})
         with st.chat_message("user"):
             st.write(user_input_active)
     else:
-        # Si fue un botón rápido, forzamos la actualización visual del mensaje del usuario
         with st.chat_message("user"):
             st.write(user_input_active)
 
     # Llamada al cerebro de Inteligencia Artificial (Gemini)
     try:
-        # Se conecta usando la API key enmascarada
         client = genai.Client(api_key=API_KEY_EXPO)
         
         with st.spinner("🤖 Consultando mi base de datos..."):
@@ -175,9 +168,8 @@ if user_input_active:
             st.write(respuesta_robot)
         st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
         
-        # Recargar para actualizar los botones rápidamente si es necesario
         if pregunta_sugerida:
             st.rerun()
 
     except Exception as e:
-        st.error("⚠️ Error de Conexión: Recuerda colocar tu Gemini API Key válida en la variable 'API_KEY_EXPO' dentro del código app_custom.py para activar al robot.")
+        st.error(f"⚠️ Error de Conexión: {e}")
