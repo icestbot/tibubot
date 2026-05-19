@@ -214,7 +214,7 @@ if user_input_active:
             client = Groq(api_key=API_KEY_EXPO)
             with st.spinner("🤖 Revisando mi base de datos..."):
                 response = client.chat.completions.create(
-                    model="llama3-8b-8192",
+                    model="llama-3.3-70b-versatile",
                     messages=[
                         {"role": "system", "content": SYSTEM_PROMPT},
                         {"role": "user", "content": user_input_active}
