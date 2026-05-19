@@ -12,9 +12,14 @@ st.set_page_config(
 # --- INYECCIÓN DE CSS PERSONALIZADO (IDENTIDAD CORPORATIVA ICEST) ---
 st.markdown("""
 <style>
-    /* Estilizar barra superior de Streamlit y fondo */
+    /* Estilizar fondo general de la app */
     .stApp {
         background-color: #fafbfc;
+    }
+    
+    /* Forzar a que TODO el texto normal de la página sea oscuro y legible */
+    .stApp, .stApp p, .stApp div, .stApp span {
+        color: #002b49 !important;
     }
     
     /* Personalizar tarjetas y contenedores de chat */
@@ -29,17 +34,25 @@ st.markdown("""
         background-color: #eef4f8 !important;
         border-left: 5px solid #002b49 !important;
     }
+    /* Forzar texto dentro del chat del asistente */
+    .stChatMessage[data-testid="stChatMessageAssistant"] p {
+        color: #002b49 !important;
+    }
 
     /* Diferenciar el chat del usuario (oro suave) */
     .stChatMessage[data-testid="stChatMessageUser"] {
         background-color: #fffaf0 !important;
         border-left: 5px solid #d4af37 !important;
     }
+    /* Forzar texto dentro del chat del usuario */
+    .stChatMessage[data-testid="stChatMessageUser"] p {
+        color: #002b49 !important;
+    }
 
-    /* Estilo para los botones rápidos de opciones */
+    /* Estilo para los botones rápidos de opciones (Texto Blanco Fijo) */
     div.stButton > button {
         background-color: #002b49 !important;
-        color: #ffffff !important;
+        color: #ffffff !important; /* <- Letra blanca */
         border-radius: 20px !important;
         border: 2px solid #d4af37 !important;
         padding: 8px 20px !important;
@@ -50,13 +63,13 @@ st.markdown("""
     
     div.stButton > button:hover {
         background-color: #d4af37 !important;
-        color: #002b49 !important;
+        color: #002b49 !important; /* <- Cambia a azul al pasar el mouse */
         transform: scale(1.03);
     }
 
     /* Título principal con colores corporativos */
     .main-title {
-        color: #002b49;
+        color: #002b49 !important;
         font-family: 'Georgia', serif;
         font-weight: bold;
         text-align: center;
@@ -65,7 +78,7 @@ st.markdown("""
     }
     
     .sub-title {
-        color: #d4af37;
+        color: #d4af37 !important;
         text-align: center;
         font-size: 18px;
         margin-bottom: 25px;
