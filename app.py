@@ -157,4 +157,93 @@ CURIOSIDADES = [
     "¿Sabías que el Museo del Automóvil del ICEST es de los más importantes del país? ¡Tiene autos clásicos reales que datan desde los inicios del transporte!",
     "¡El ICEST nació el 16 de abril de 1979! Empezó solo con bachillerato y carreras técnicas, y hoy tiene hasta complejos hospitalarios de primer nivel.",
     "El lema oficial de la escuela es 'Calidad en educación a tu alcance'. ¡Fue elegido para reflejar el compromiso de llevar educación de nivel a todas partes!",
-    "El Hospital San Juan Pablo II
+    "El Hospital San Juan Pablo II del ICEST cuenta con tecnología médica de vanguardia única en el sur de Tamaulipas, donde practican los alumnos de medicina y enfermería.",
+    "¡El ICEST está en gran parte de México! Además de Tamaulipas, tiene presencia física en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México.",
+    "¡Identidad ICEST! Los valores principales de la institución que guían a cada alumno son la Honestidad, el Sentido de Responsabilidad y la Vocación de Servicio."
+]
+
+if "indice_curiosidad" not in st.session_state:
+    st.session_state.indice_curiosidad = 0
+if "esperando_afirmacion" not in st.session_state:
+    st.session_state.esperando_afirmacion = False
+
+# Mostrar historial de conversación
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
+
+# --- SECCIÓN DE BOTONES RÁPIDOS (PREGUNTAS PRINCIPALES) ---
+st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
+
+col1, col2 = st.columns(2)
+pregunta_sugerida = None
+disparar_curiosidad = False
+
+with col1:
+    if st.button("📜 Historia de Fundación"):
+        pregunta_sugerida = "¿Quién fundó el ICEST y en qué año?"
+    if st.button("🎓 Oferta Educativa"):
+        pregunta_sugerida = "¿Qué niveles educativos y carreras se pueden estudiar en el ICEST?"
+
+with col2:
+    if st.button("🏫 Campus y Sedes"):
+        pregunta_sugerida = "¿Cuáles son los campus y estados donde tiene presencia el ICEST?"
+    if st.button("✨ Datos Curiosos"):
+        disparar_curiosidad = True
+
+# --- LÓGICA DE TEXTO Y CAPTURA ---
+user_input_active = None
+
+if pregunta_sugerida:
+    st.session_state.messages.append({"role": "user", "content": pregunta_sugerida})
+    user_input_active = pregunta_sugerida
+elif disparar_curiosidad:
+    user_input_active = "¡Cuéntame un dato curioso!"
+    st.session_state.esperando_afirmacion = True
+else:
+    captura_chat = st.chat_input("Escribe tu pregunta aquí...")
+    if captura_chat:
+        user_input_active = captura_chat
+
+# Control de respuestas afirmativas para seguir hilando curiosidades
+if user_input_active and not pregunta_sugerida and not disparar_curiosidad:
+    if st.session_state.esperando_afirmacion:
+        texto_usuario = user_input_active.lower().strip()
+        if texto_usuario in ["si", "sí", "claro", "por supuesto", "otra", "siguiente", "ok", "va", "simon", "dale"]:
+            st.session_state.indice_curiosidad = (st.session_state.indice_curiosidad + 1) % len(CURIOSIDADES)
+        else:
+            st.session_state.esperando_afirmacion = False
+
+# --- PROCESAMIENTO E INTERACCIÓN ---
+if user_input_active:
+    if not pregunta_sugerida and not disparar_curiosidad:
+        st.session_state.messages.append({"role": "user", "content": user_input_active})
+    
+    with st.chat_message("user"):
+        st.write(user_input_active)
+
+    try:
+        # MODO CURIOSIDAD ACTIVO
+        if st.session_state.esperando_afirmacion:
+            dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
+            respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí*, *Claro* o dale de nuevo al botón)"
+        
+        # MODO PREGUNTA NORMAL
+        else:
+            client = genai.Client(api_key=API_KEY_EXPO)
+            with st.spinner("🤖 Revisando mi base de datos..."):
+                prompt_final = f"{SYSTEM_PROMPT}\n\nPregunta del visitante: {user_input_active}\nRespuesta de Tibu:"
+                response = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt_final
+                )
+                respuesta_robot = response.text
+
+        with st.chat_message("assistant"):
+            st.write(respuesta_robot)
+        st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
+        
+        st.rerun()
+
+    except Exception as e:
+        st.error(f"⚠️ Error de Conexión: {e}")
