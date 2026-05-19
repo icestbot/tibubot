@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+from groq import Groq
 
 # --- CONFIGURACIÓN DE PÁGINA (ESTILO PROFESIONAL) ---
 st.set_page_config(
@@ -12,24 +12,17 @@ st.set_page_config(
 # --- INYECCIÓN DE CSS PERSONALIZADO (IDENTIDAD CORPORATIVA ICEST) ---
 st.markdown("""
 <style>
-    /* Estilizar fondo general de la app */
     .stApp {
         background-color: #fafbfc;
     }
-    
-    /* Forzar a que el texto normal de la página sea oscuro y legible */
     .stApp p, .main-title, .sub-title {
         color: #002b49 !important;
     }
-    
-    /* Personalizar tarjetas y contenedores de chat */
     .stChatMessage {
         border-radius: 15px !important;
         padding: 15px !important;
         margin-bottom: 12px !important;
     }
-    
-    /* Diferenciar el chat del asistente (azul ICEST suave) */
     .stChatMessage[data-testid="stChatMessageAssistant"] {
         background-color: #eef4f8 !important;
         border-left: 5px solid #002b49 !important;
@@ -37,8 +30,6 @@ st.markdown("""
     .stChatMessage[data-testid="stChatMessageAssistant"] p {
         color: #002b49 !important;
     }
-
-    /* Diferenciar el chat del usuario (oro suave) */
     .stChatMessage[data-testid="stChatMessageUser"] {
         background-color: #fffaf0 !important;
         border-left: 5px solid #d4af37 !important;
@@ -46,8 +37,6 @@ st.markdown("""
     .stChatMessage[data-testid="stChatMessageUser"] p {
         color: #002b49 !important;
     }
-
-    /* --- SOLUCIÓN DE LETRAS INVISIBLES EN BOTONES --- */
     div.stButton > button {
         background-color: #002b49 !important;
         border-radius: 20px !important;
@@ -57,26 +46,20 @@ st.markdown("""
         transition: all 0.3s ease !important;
         width: 100%;
     }
-    
     div.stButton > button div, 
     div.stButton > button span, 
     div.stButton > button p {
         color: #ffffff !important;
     }
-    
-    /* Efecto Hover (pasar el mouse) */
     div.stButton > button:hover {
         background-color: #d4af37 !important;
         transform: scale(1.03);
     }
-    
     div.stButton > button:hover div, 
     div.stButton > button:hover span, 
     div.stButton > button:hover p {
         color: #002b49 !important;
     }
-
-    /* Título principal con colores corporativos */
     .main-title {
         color: #002b49 !important;
         font-family: 'Georgia', serif;
@@ -85,7 +68,6 @@ st.markdown("""
         margin-bottom: 5px;
         font-size: 38px;
     }
-    
     .sub-title {
         color: #d4af37 !important;
         text-align: center;
@@ -101,7 +83,7 @@ st.markdown("""
 # --- CLAVE API LEYENDO DESDE STREAMLIT SECRETS ---
 API_KEY_EXPO = st.secrets["API_KEY_EXPO"] 
 
-# --- BASE DE DATOS DE CONOCIMIENTOS (CON INFO COMPLETADA) ---
+# --- BASE DE DATOS DE CONOCIMIENTOS ---
 HISTORIA_ICEST = """
 El Instituto de Ciencias y Estudios Superiores de Tamaulipas (ICEST) fue fundado el 16 de abril de 1979 por el Rector Emérito, Lic. Carlos L. Dorantes del Rosal, D.E.
 La rectora actual es la Mtra. Sandra L. Ávila Ramírez y su lema oficial es: "Calidad en educación a tu alcance".
@@ -153,13 +135,12 @@ with col_reset:
 
 st.write("¡Bienvenido! Ven a chatear conmigo en tiempo real. Descubre la historia, los campus y los datos más interesantes de nuestra escuela.")
 
-# --- MEMORIA INTEGRADA DEL CHAT Y SISTEMA DE TRIVIA ---
+# --- MEMORIA INTEGRADA DEL CHAT ---
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "assistant", "content": "¡Hola! 🤖 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
     ]
 
-# Lista de datos curiosos extraídos de su identidad y web
 CURIOSIDADES = [
     "¿Sabías que el Museo del Automóvil del ICEST es de los más importantes del país? ¡Tiene autos clásicos reales que datan desde los inicios del transporte!",
     "¡El ICEST nació el 16 de abril de 1979! Empezó solo con bachillerato y carreras técnicas, y hoy tiene hasta complejos hospitalarios de primer nivel.",
@@ -174,14 +155,12 @@ if "indice_curiosidad" not in st.session_state:
 if "esperando_afirmacion" not in st.session_state:
     st.session_state.esperando_afirmacion = False
 
-# Mostrar historial de conversación
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# --- SECCIÓN DE BOTONES RÁPIDOS (PREGUNTAS PRINCIPALES) ---
+# --- SECCIÓN DE BOTONES RÁPIDOS ---
 st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
-
 col1, col2 = st.columns(2)
 pregunta_sugerida = None
 disparar_curiosidad = False
@@ -198,9 +177,7 @@ with col2:
     if st.button("✨ Datos Curiosos"):
         disparar_curiosidad = True
 
-# --- LÓGICA DE TEXTO Y CAPTURA ---
 user_input_active = None
-
 if pregunta_sugerida:
     st.session_state.messages.append({"role": "user", "content": pregunta_sugerida})
     user_input_active = pregunta_sugerida
@@ -212,7 +189,6 @@ else:
     if captura_chat:
         user_input_active = captura_chat
 
-# Control de respuestas afirmativas para seguir hilando curiosidades
 if user_input_active and not pregunta_sugerida and not disparar_curiosidad:
     if st.session_state.esperando_afirmacion:
         texto_usuario = user_input_active.lower().strip()
@@ -221,7 +197,7 @@ if user_input_active and not pregunta_sugerida and not disparar_curiosidad:
         else:
             st.session_state.esperando_afirmacion = False
 
-# --- PROCESAMIENTO E INTERACCIÓN ---
+# --- PROCESAMIENTO CON LA API DE GROQ ---
 if user_input_active:
     if not pregunta_sugerida and not disparar_curiosidad:
         st.session_state.messages.append({"role": "user", "content": user_input_active})
@@ -230,27 +206,26 @@ if user_input_active:
         st.write(user_input_active)
 
     try:
-        # MODO CURIOSIDAD ACTIVO
         if st.session_state.esperando_afirmacion:
             dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
             respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí*, *Claro* o dale de nuevo al botón)"
-        
-        # MODO PREGUNTA NORMAL
         else:
-            client = genai.Client(api_key=API_KEY_EXPO)
+            # Llamada oficial a Groq usando Llama 3 para velocidad máxima
+            client = Groq(api_key=API_KEY_EXPO)
             with st.spinner("🤖 Revisando mi base de datos..."):
-                prompt_final = f"{SYSTEM_PROMPT}\n\nPregunta del visitante: {user_input_active}\nRespuesta de Tibu:"
-                response = client.models.generate_content(
-                    model='gemini-2.5-flash',
-                    contents=prompt_final
+                response = client.chat.completions.create(
+                    model="llama3-8b-8192",
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": user_input_active}
+                    ],
                 )
-                respuesta_robot = response.text
+                respuesta_robot = response.choices[0].message.content
 
         with st.chat_message("assistant"):
             st.write(respuesta_robot)
         st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
-        
         st.rerun()
 
     except Exception as e:
-        st.error(f"⚠️ Error de Conexión: {e}")
+        st.error(f"⚠️ Detalle técnico en la conexión: {e}")
