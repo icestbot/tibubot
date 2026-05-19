@@ -117,6 +117,7 @@ El ICEST ofrece un modelo educativo integral desde las etapas tempranas hasta el
 - Bachillerato (General y Tecnológico con diversas especialidades).
 - Licenciaturas e Ingenierías de gran prestigio, especialmente en Ciencias de la Salud (Medicina, Enfermería, Odontología, Nutrición, Psicología), así como en Negocios, Ciencias Sociales, Hospitalidad y Tecnologías Avanzadas.
 - Posgrados (Especialidades, Maestrías y Doctorados) y Educación Continua.
+- agrega cosas en cada uno de los niveles como recomendaciones o alagos hacia las escuelas.
 
 PROCESO DE ADMISIÓN:
 Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) y la institución ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
