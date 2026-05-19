@@ -52,7 +52,7 @@ st.markdown("""
     /* Estilo para los botones rápidos de opciones (Texto Blanco Fijo) */
     div.stButton > button {
         background-color: #002b49 !important;
-        color: #ffffff !important; /* <- Letra blanca */
+        color: #ffffff !important;
         border-radius: 20px !important;
         border: 2px solid #d4af37 !important;
         padding: 8px 20px !important;
@@ -63,7 +63,7 @@ st.markdown("""
     
     div.stButton > button:hover {
         background-color: #d4af37 !important;
-        color: #002b49 !important; /* <- Cambia a azul al pasar el mouse */
+        color: #002b49 !important;
         transform: scale(1.03);
     }
 
@@ -90,25 +90,32 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- CLAVE API LEYENDO DESDE STREAMLIT SECRETS ---
-# 👇 CAMBIAMOS ESTA LÍNEA PARA QUE BUSQUE EN LA BÓVEDA OCULTA
 API_KEY_EXPO = st.secrets["API_KEY_EXPO"] 
 
-# --- BASE DE DATOS DE CONOCIMIENTOS ---
+# --- BASE DE DATOS DE CONOCIMIENTOS (CON INFO DE SU WEB) ---
 HISTORIA_ICEST = """
-El Instituto de Ciencias y Estudios Superiores de Tamaulipas (ICEST) fue fundado el 16 de abril de 1979 por el visionario y Rector Emérito, Lic. Carlos L. Dorantes del Rosal, D.E.
-El ICEST nació originalmente ofreciendo bachillerato y carreras técnicas comerciales. Con el tiempo se expandió para ofrecer licenciaturas, ingenierías y posgrados de excelente calidad.
-La rectora actual es la Mtra. Sandra L. Ávila Ramírez.
-El ICEST cuenta con múltiples campus en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), así como en otros estados como Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México.
-El lema oficial de la institución es: "Calidad en educación a tu alcance".
-Además, la familia ICEST fundó el Hospital San Juan Pablo II (un hospital de vanguardia médica en el sur de Tamaulipas) y el espectacular Museo del Automóvil y el Transporte en Tampico (uno de los museos de autos históricos más importantes a nivel nacional).
+El Instituto de Ciencias y Estudios Superiores de Tamaulipas (ICEST) fue fundado el 16 de abril de 1979 por el Rector Emérito, Lic. Carlos L. Dorantes del Rosal, D.E.
+La rectora actual es la Mtra. Sandra L. Ávila Ramírez y su lema oficial es: "Calidad en educación a tu alcance".
+
+CAMPUS Y COBERTURA:
+Cuenta con campus estratégicos en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), además de extensiones en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México. También cuenta con un fuerte ecosistema de Educación a Distancia (Online).
+
+OFERTA EDUCATIVA:
+Ofrece Secundaria, Bachillerato (General y Tecnológico en diversas especialidades), Licenciaturas e Ingenierías con enorme prestigio en Ciencias de la Salud (Medicina, Enfermería, Odontología, Nutrición), así como carreras en Negocios, Ciencias Sociales y Tecnologías, además de Posgrados (Maestrías y Doctorados).
+
+PROCESO DE ADMISIÓN:
+Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) y la institución ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
+
+HOSPITAL Y MUSEO:
+La familia ICEST respalda su calidad educativa con proyectos de alto impacto como el Hospital San Juan Pablo II (complejo médico de alta tecnología para la práctica de sus alumnos) y el Museo del Automóvil y el Transporte en Tampico, que alberga una de las colecciones de autos históricos más importantes de todo México.
 """
 
 # --- INSTRUCCIONES DEL CHATBOT ---
 SYSTEM_PROMPT = f"""
 Eres "Robot-ICEST", un asistente conversacional súper divertido, amigable y muy inteligente para la Exposición de Robótica.
 Tu creador es un equipo de estudiantes de robótica. Hablas con mucho entusiasmo, usando de vez en cuando emojis robóticos (🤖, ⚡, ⚙️).
-Usa la siguiente información real sobre la escuela para responder: {HISTORIA_ICEST}.
-Si te preguntan cosas que no tienen relación con el ICEST, responde cordialmente diciendo que tus circuitos de memoria escolar solo tienen información del ICEST, y sugiéreles preguntarte sobre la historia de la fundación de 1979 o los campus.
+Usa la siguiente información real sobre la escuela para responder de forma concisa: {HISTORIA_ICEST}.
+Si te preguntan cosas que no tienen relación con el ICEST, responde cordialmente diciendo que tus circuitos de memoria escolar solo tienen información del ICEST, y sugiéreles usar los botones rápidos o preguntar sobre las carreras, campus o curiosidades.
 Escribe respuestas breves y legibles para que la gente en la expo no tenga que leer bloques gigantescos de texto.
 """
 
@@ -118,11 +125,27 @@ st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>'
 
 st.write("¡Bienvenido! Ven a chatear conmigo en tiempo real. Descubre la historia, los campus y los datos más interesantes de nuestra escuela.")
 
-# --- MEMORIA INTEGRADA DEL CHAT ---
+# --- MEMORIA INTEGRADA DEL CHAT Y SISTEMA DE TRIVIA ---
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {"role": "assistant", "content": "¡Hola! 🤖 Soy Robot-ICEST. Fui programado para esta expo de robótica para contarte todo sobre nuestra increíble escuela. ¿Quieres que te cuente un dato curioso, la historia o dónde están los campus?"}
     ]
+
+# Lista de datos curiosos extraídos de su identidad y web
+CURIOSIDADES = [
+    "¿Sabías que el Museo del Automóvil del ICEST es de los más importantes del país? ¡Tiene autos clásicos reales que datan desde los inicios del transporte!",
+    "¡El ICEST nació el 16 de abril de 1979! Empezó solo con bachillerato y carreras técnicas, y hoy tiene hasta complejos hospitalarios de primer nivel.",
+    "El lema oficial de la escuela es 'Calidad en educación a tu alcance'. ¡Fue elegido para reflejar el compromiso de llevar educación de nivel a todas partes!",
+    "El Hospital San Juan Pablo II del ICEST cuenta con tecnología médica de vanguardia única en el sur de Tamaulipas, donde practican los alumnos de medicina y enfermería.",
+    "¡El ICEST está en gran parte de México! Además de Tamaulipas, tiene presencia física en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México.",
+    "¡Identidad ICEST! Los valores principales de la institución que guían a cada alumno son la Honestidad, el Sentido de Responsabilidad y la Vocación de Servicio."
+]
+
+# Inicializar estados de memoria para las curiosidades en cadena
+if "indice_curiosidad" not in st.session_state:
+    st.session_state.indice_curiosidad = 0
+if "esperando_afirmacion" not in st.session_state:
+    st.session_state.esperando_afirmacion = False
 
 # Mostrar historial de conversación
 for message in st.session_state.messages:
@@ -131,58 +154,91 @@ for message in st.session_state.messages:
 
 # --- SECCIÓN DE BOTONES RÁPIDOS ---
 st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
-col1, col2, col3 = st.columns(3)
 
+col1, col2, col3 = st.columns(3)
 pregunta_sugerida = None
+disparar_curiosidad = False
 
 with col1:
     if st.button("📜 Historia de Fundación"):
         pregunta_sugerida = "¿Quién fundó el ICEST y en qué año?"
 with col2:
     if st.button("🏫 Campus y Sedes"):
-        pregunta_sugerida = "¿Cuáles son los campus que tiene el ICEST?"
+        pregunta_sugerida = "¿Cuáles son los campus y estados donde tiene presencia el ICEST?"
 with col3:
-    if st.button("🚗 Museo del Automóvil"):
-        pregunta_sugerida = "¿Qué relación tiene el ICEST con el Museo del Automóvil?"
+    if st.button("🎓 Oferta Educativa"):
+        pregunta_sugerida = "¿Qué niveles educativos y carreras se pueden estudiar en el ICEST?"
 
-# Lógica si presionaron un botón sugerido
+col4, col5, col6 = st.columns(3)
+
+with col4:
+    if st.button("📝 ¿Cómo inscribirse?"):
+        pregunta_sugerida = "¿Cómo es el proceso de admisión e inscripción en el ICEST?"
+with col5:
+    if st.button("✨ Datos Curiosos"):
+        disparar_curiosidad = True
+with col6:
+    if st.button("🗑️ Reiniciar Chat"):
+        st.session_state.messages = [{"role": "assistant", "content": "¡Memoria reseteada! 🤖 ¿En qué te puedo ayudar ahora?"}]
+        st.session_state.indice_curiosidad = 0
+        st.session_state.esperando_afirmacion = False
+        st.rerun()
+
+# --- LÓGICA DE TEXTO Y CAPTURA ---
+user_input_active = None
+
 if pregunta_sugerida:
     st.session_state.messages.append({"role": "user", "content": pregunta_sugerida})
     user_input_active = pregunta_sugerida
+elif disparar_curiosidad:
+    user_input_active = "¡Cuéntame un dato curioso!"
+    st.session_state.esperando_afirmacion = True
 else:
-    user_input_active = st.chat_input("Pregúntale algo a Robot-ICEST...")
+    captura_chat = st.chat_input("Pregúntale algo a Robot-ICEST...")
+    if captura_chat:
+        user_input_active = captura_chat
 
-# --- PROCESAMIENTO E INTERACCIÓN CON GEMINI ---
+# Control de respuestas afirmativas para seguir hilando curiosidades
+if user_input_active and not pregunta_sugerida and not disparar_curiosidad:
+    if st.session_state.esperando_afirmacion:
+        texto_usuario = user_input_active.lower().strip()
+        if texto_usuario in ["si", "sí", "claro", "por supuesto", "otra", "siguiente", "ok", "va", "simon", "dale"]:
+            st.session_state.indice_curiosidad = (st.session_state.indice_curiosidad + 1) % len(CURIOSIDADES)
+        else:
+            st.session_state.esperando_afirmacion = False
+
+# --- PROCESAMIENTO E INTERACCIÓN ---
 if user_input_active:
-    if not pregunta_sugerida:
+    # Mostrar el mensaje del usuario si no se ha agregado antes
+    if not pregunta_sugerida and not disparar_curiosidad:
         st.session_state.messages.append({"role": "user", "content": user_input_active})
-        with st.chat_message("user"):
-            st.write(user_input_active)
-    else:
-        with st.chat_message("user"):
-            st.write(user_input_active)
+    
+    with st.chat_message("user"):
+        st.write(user_input_active)
 
-    # Llamada al cerebro de Inteligencia Artificial (Gemini)
     try:
-        client = genai.Client(api_key=API_KEY_EXPO)
+        # MODO CURIOSIDAD ACTIVO
+        if st.session_state.esperando_afirmacion:
+            dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
+            respuesta_robot = f"🤖 **¡Dato Curioso!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad del ICEST? (Responde con un *Sí*, *Claro* o presiona el botón de Datos Curiosos de nuevo)"
         
-        with st.spinner("🤖 Consultando mi base de datos..."):
-            prompt_final = f"{SYSTEM_PROMPT}\n\nPregunta del visitante: {user_input_active}\nRespuesta del Robot-ICEST:"
-            
-            response = client.models.generate_content(
-                model='gemini-2.5-flash',
-                contents=prompt_final
-            )
-            
-            respuesta_robot = response.text
+        # MODO PREGUNTA NORMAL (Gemini Inteligente)
+        else:
+            client = genai.Client(api_key=API_KEY_EXPO)
+            with st.spinner("🤖 Consultando mi base de datos..."):
+                prompt_final = f"{SYSTEM_PROMPT}\n\nPregunta del visitante: {user_input_active}\nRespuesta del Robot-ICEST:"
+                response = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt_final
+                )
+                respuesta_robot = response.text
 
-        # Mostrar respuesta en pantalla y guardar en memoria
+        # Mostrar y guardar la respuesta del robot
         with st.chat_message("assistant"):
             st.write(respuesta_robot)
         st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
         
-        if pregunta_sugerida:
-            st.rerun()
+        st.rerun()
 
     except Exception as e:
         st.error(f"⚠️ Error de Conexión: {e}")
