@@ -9,57 +9,79 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- INYECCIÓN DE CSS PERSONALIZADO (IDENTIDAD CORPORATIVA ICEST) ---
+# --- INYECCIÓN DE CSS PERSONALIZADO (BLINDAJE DE COLORES ANTI-MODO OSCURO) ---
 st.markdown("""
 <style>
+    /* Forzar fondo claro */
     .stApp {
-        background-color: #fafbfc;
+        background-color: #fafbfc !important;
     }
-    .stApp p, .main-title, .sub-title {
+    
+    /* BLINDAJE CONTRA LETRAS INVISIBLES: Obliga a todo texto común a ser azul marino */
+    .stApp p, .stApp span, .stApp label, .stApp li, .main-title, .sub-title, .stMarkdown div p {
         color: #002b49 !important;
     }
+    
+    /* Contenedores de chat generales */
     .stChatMessage {
         border-radius: 15px !important;
         padding: 15px !important;
         margin-bottom: 12px !important;
     }
+    
+    /* Chat del asistente (Azul ICEST suave) con texto forzado oscuro */
     .stChatMessage[data-testid="stChatMessageAssistant"] {
         background-color: #eef4f8 !important;
         border-left: 5px solid #002b49 !important;
     }
-    .stChatMessage[data-testid="stChatMessageAssistant"] p {
+    .stChatMessage[data-testid="stChatMessageAssistant"] p,
+    .stChatMessage[data-testid="stChatMessageAssistant"] span,
+    .stChatMessage[data-testid="stChatMessageAssistant"] div {
         color: #002b49 !important;
     }
+
+    /* Chat del usuario (Oro suave) con texto forzado oscuro */
     .stChatMessage[data-testid="stChatMessageUser"] {
         background-color: #fffaf0 !important;
         border-left: 5px solid #d4af37 !important;
     }
-    .stChatMessage[data-testid="stChatMessageUser"] p {
+    .stChatMessage[data-testid="stChatMessageUser"] p,
+    .stChatMessage[data-testid="stChatMessageUser"] span,
+    .stChatMessage[data-testid="stChatMessageUser"] div {
         color: #002b49 !important;
     }
+
+    /* --- ESTILO SEGURO PARA BOTONES RÁPIDOS --- */
     div.stButton > button {
         background-color: #002b49 !important;
         border-radius: 20px !important;
         border: 2px solid #d4af37 !important;
-        padding: 8px 20px !important;
+        padding: 8px 15px !important;
         font-weight: bold !important;
         transition: all 0.3s ease !important;
-        width: 100%;
+        width: 100% !important;
     }
+    
+    /* Forzar a que el texto interno de los botones sea siempre blanco */
     div.stButton > button div, 
     div.stButton > button span, 
     div.stButton > button p {
         color: #ffffff !important;
     }
+    
+    /* Efecto Hover (pasar el dedo o mouse) */
     div.stButton > button:hover {
         background-color: #d4af37 !important;
-        transform: scale(1.03);
+        transform: scale(1.02);
     }
+    
     div.stButton > button:hover div, 
     div.stButton > button:hover span, 
     div.stButton > button:hover p {
         color: #002b49 !important;
     }
+
+    /* Títulos principales */
     .main-title {
         color: #002b49 !important;
         font-family: 'Georgia', serif;
@@ -68,6 +90,7 @@ st.markdown("""
         margin-bottom: 5px;
         font-size: 38px;
     }
+    
     .sub-title {
         color: #d4af37 !important;
         text-align: center;
@@ -101,13 +124,13 @@ El ICEST ofrece un modelo educativo integral desde las etapas tempranas hasta el
 - Posgrados (Especialidades, Maestrías y Doctorados) y Educación Continua.
 
 PROCESO DE ADMISIÓN:
-Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) y la institución ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
+Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) y la institution ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
 
 HOSPITAL Y MUSEO:
 La familia ICEST respalda su calidad educativa con proyectos de alto impacto como el Hospital San Juan Pablo II (complejo médico de alta tecnología para la práctica de sus alumnos) y el Museo del Automóvil y el Transporte en Tampico, que alberga una de las colecciones de autos históricos más importantes de todo México.
 """
 
-# --- INSTRUCCIONES DEL CHATBOT ---
+# --- INSTRUCCIONES DEL CHATBOT (TUS REGLAS INTACTAS) ---
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
 Tu objetivo es dar información sobre el ICEST usando estos datos: {HISTORIA_ICEST}.
@@ -211,7 +234,6 @@ if user_input_active:
             dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
             respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí*, *Claro* o dale de nuevo al botón)"
         else:
-            # Llamada oficial a Groq usando Llama 3 para velocidad máxima
             client = Groq(api_key=API_KEY_EXPO)
             with st.spinner("🤖 Revisando mi base de datos..."):
                 response = client.chat.completions.create(
