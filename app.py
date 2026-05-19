@@ -17,8 +17,8 @@ st.markdown("""
         background-color: #fafbfc;
     }
     
-    /* Forzar a que TODO el texto normal de la página sea oscuro y legible */
-    .stApp, .stApp p, .stApp div, .stApp span {
+    /* Forzar a que el texto normal de la página sea oscuro y legible */
+    .stApp p, .main-title, .sub-title {
         color: #002b49 !important;
     }
     
@@ -34,7 +34,6 @@ st.markdown("""
         background-color: #eef4f8 !important;
         border-left: 5px solid #002b49 !important;
     }
-    /* Forzar texto dentro del chat del asistente */
     .stChatMessage[data-testid="stChatMessageAssistant"] p {
         color: #002b49 !important;
     }
@@ -44,15 +43,14 @@ st.markdown("""
         background-color: #fffaf0 !important;
         border-left: 5px solid #d4af37 !important;
     }
-    /* Forzar texto dentro del chat del usuario */
     .stChatMessage[data-testid="stChatMessageUser"] p {
         color: #002b49 !important;
     }
 
-    /* Estilo para los botones rápidos de opciones (Texto Blanco Fijo) */
+    /* --- SOLUCIÓN DE LETRAS INVISIBLES EN BOTONES --- */
+    /* Forzamos el color del botón y que sus textos internos (span, p) sean BLANCOS */
     div.stButton > button {
         background-color: #002b49 !important;
-        color: #ffffff !important;
         border-radius: 20px !important;
         border: 2px solid #d4af37 !important;
         padding: 8px 20px !important;
@@ -61,10 +59,23 @@ st.markdown("""
         width: 100%;
     }
     
+    /* Esto obliga a que el texto de Streamlit dentro del botón sea blanco */
+    div.stButton > button div, 
+    div.stButton > button span, 
+    div.stButton > button p {
+        color: #ffffff !important;
+    }
+    
+    /* Efecto Hover (pasar el mouse) */
     div.stButton > button:hover {
         background-color: #d4af37 !important;
-        color: #002b49 !important;
         transform: scale(1.03);
+    }
+    
+    div.stButton > button:hover div, 
+    div.stButton > button:hover span, 
+    div.stButton > button:hover p {
+        color: #002b49 !important;
     }
 
     /* Título principal con colores corporativos */
@@ -123,6 +134,15 @@ Escribe respuestas breves y legibles para que la gente en la expo no tenga que l
 st.markdown('<div class="main-title">🤖 ROBOT-ICEST 🤖</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>', unsafe_allow_html=True)
 
+# --- BOTÓN DISCRETO DE REINICIAR (ESQUINA SUPERIOR DERECHA) ---
+col_espacio, col_reset = st.columns([4, 1])
+with col_reset:
+    if st.button("🗑️ Reiniciar"):
+        st.session_state.messages = [{"role": "assistant", "content": "¡Memoria reseteada! 🤖 ¿En qué te puedo ayudar ahora?"}]
+        st.session_state.indice_curiosidad = 0
+        st.session_state.esperando_afirmacion = False
+        st.rerun()
+
 st.write("¡Bienvenido! Ven a chatear conmigo en tiempo real. Descubre la historia, los campus y los datos más interesantes de nuestra escuela.")
 
 # --- MEMORIA INTEGRADA DEL CHAT Y SISTEMA DE TRIVIA ---
@@ -141,7 +161,6 @@ CURIOSIDADES = [
     "¡Identidad ICEST! Los valores principales de la institución que guían a cada alumno son la Honestidad, el Sentido de Responsabilidad y la Vocación de Servicio."
 ]
 
-# Inicializar estados de memoria para las curiosidades en cadena
 if "indice_curiosidad" not in st.session_state:
     st.session_state.indice_curiosidad = 0
 if "esperando_afirmacion" not in st.session_state:
@@ -152,37 +171,24 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
 
-# --- SECCIÓN DE BOTONES RÁPIDOS ---
+# --- SECCIÓN DE BOTONES RÁPIDOS (PREGUNTAS PRINCIPALES) ---
 st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
 
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 pregunta_sugerida = None
 disparar_curiosidad = False
 
 with col1:
     if st.button("📜 Historia de Fundación"):
         pregunta_sugerida = "¿Quién fundó el ICEST y en qué año?"
-with col2:
-    if st.button("🏫 Campus y Sedes"):
-        pregunta_sugerida = "¿Cuáles son los campus y estados donde tiene presencia el ICEST?"
-with col3:
     if st.button("🎓 Oferta Educativa"):
         pregunta_sugerida = "¿Qué niveles educativos y carreras se pueden estudiar en el ICEST?"
 
-col4, col5, col6 = st.columns(3)
-
-with col4:
-    if st.button("📝 ¿Cómo inscribirse?"):
-        pregunta_sugerida = "¿Cómo es el proceso de admisión e inscripción en el ICEST?"
-with col5:
+with col2:
+    if st.button("🏫 Campus y Sedes"):
+        pregunta_sugerida = "¿Cuáles son los campus y estados donde tiene presencia el ICEST?"
     if st.button("✨ Datos Curiosos"):
         disparar_curiosidad = True
-with col6:
-    if st.button("🗑️ Reiniciar Chat"):
-        st.session_state.messages = [{"role": "assistant", "content": "¡Memoria reseteada! 🤖 ¿En qué te puedo ayudar ahora?"}]
-        st.session_state.indice_curiosidad = 0
-        st.session_state.esperando_afirmacion = False
-        st.rerun()
 
 # --- LÓGICA DE TEXTO Y CAPTURA ---
 user_input_active = None
@@ -209,7 +215,6 @@ if user_input_active and not pregunta_sugerida and not disparar_curiosidad:
 
 # --- PROCESAMIENTO E INTERACCIÓN ---
 if user_input_active:
-    # Mostrar el mensaje del usuario si no se ha agregado antes
     if not pregunta_sugerida and not disparar_curiosidad:
         st.session_state.messages.append({"role": "user", "content": user_input_active})
     
@@ -222,7 +227,7 @@ if user_input_active:
             dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
             respuesta_robot = f"🤖 **¡Dato Curioso!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad del ICEST? (Responde con un *Sí*, *Claro* o presiona el botón de Datos Curiosos de nuevo)"
         
-        # MODO PREGUNTA NORMAL (Gemini Inteligente)
+        # MODO PREGUNTA NORMAL
         else:
             client = genai.Client(api_key=API_KEY_EXPO)
             with st.spinner("🤖 Consultando mi base de datos..."):
@@ -233,7 +238,6 @@ if user_input_active:
                 )
                 respuesta_robot = response.text
 
-        # Mostrar y guardar la respuesta del robot
         with st.chat_message("assistant"):
             st.write(respuesta_robot)
         st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
