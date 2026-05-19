@@ -101,7 +101,7 @@ st.markdown("""
 # --- CLAVE API LEYENDO DESDE STREAMLIT SECRETS ---
 API_KEY_EXPO = st.secrets["API_KEY_EXPO"] 
 
-# --- BASE DE DATOS DE CONOCIMIENTOS (CON INFO DE SU WEB) ---
+# --- BASE DE DATOS DE CONOCIMIENTOS (CON INFO COMPLETADA) ---
 HISTORIA_ICEST = """
 El Instituto de Ciencias y Estudios Superiores de Tamaulipas (ICEST) fue fundado el 16 de abril de 1979 por el Rector Emérito, Lic. Carlos L. Dorantes del Rosal, D.E.
 La rectora actual es la Mtra. Sandra L. Ávila Ramírez y su lema oficial es: "Calidad en educación a tu alcance".
@@ -109,8 +109,14 @@ La rectora actual es la Mtra. Sandra L. Ávila Ramírez y su lema oficial es: "C
 CAMPUS Y COBERTURA:
 Cuenta con campus estratégicos en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), además de extensiones en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México. También cuenta con un fuerte ecosistema de Educación a Distancia (Online).
 
-OFERTA EDUCATIVA:
-Ofrece Secundaria, Bachillerato (General y Tecnológico en diversas especialidades), Licenciaturas e Ingenierías con enorme prestigio en Ciencias de la Salud (Medicina, Enfermería, Odontología, Nutrición), así como carreras en Negocios, Ciencias Sociales y Tecnologías, además de Posgrados (Maestrías y Doctorados).
+OFERTA EDUCATIVA COMPLETA:
+El ICEST ofrece un modelo educativo integral desde las etapas tempranas hasta el nivel profesional:
+- Educación Inicial (Maternal).
+- Educación Preescolar (Kinder).
+- Primaria y Secundaria.
+- Bachillerato (General y Tecnológico con diversas especialidades).
+- Licenciaturas e Ingenierías de gran prestigio, especialmente en Ciencias de la Salud (Medicina, Enfermería, Odontología, Nutrición, Psicología), así como en Negocios, Ciencias Sociales, Hospitalidad y Tecnologías Avanzadas.
+- Posgrados (Especialidades, Maestrías y Doctorados) y Educación Continua.
 
 PROCESO DE ADMISIÓN:
 Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) y la institución ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
@@ -119,7 +125,7 @@ HOSPITAL Y MUSEO:
 La familia ICEST respalda su calidad educativa con proyectos de alto impacto como el Hospital San Juan Pablo II (complejo médico de alta tecnología para la práctica de sus alumnos) y el Museo del Automóvil y el Transporte en Tampico, que alberga una de las colecciones de autos históricos más importantes de todo México.
 """
 
-# --- INSTRUCCIONES DEL CHATBOT (PERSONALIDAD DE TIBU NATURAL) ---
+# --- INSTRUCCIONES DEL CHATBOT ---
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
 Tu objetivo es dar información sobre el ICEST usando estos datos: {HISTORIA_ICEST}.
@@ -128,7 +134,8 @@ REGLAS DE ACTITUD REQUERIDAS:
 1. Actúa de forma natural, amigable y conversacional. No suenes robótico ni aburrido.
 2. REGLA ESTRICTA: No repitas tu nombre ("Tibu") ni digas "Soy Tibu" en cada respuesta. Solo te presentaste al inicio y ya está. Habla directamente sobre lo que te preguntan.
 3. Sé directo y conciso. No avientes textos gigantescos; la gente en el stand prefiere respuestas rápidas y fáciles de leer.
-4. Si te preguntan cosas que no tengan nada que ver con la escuela, di de manera relajada que tus circuitos solo traen la info del ICEST y recomiéndales usar los botones o preguntar por las carreras o campus.
+4. Asegúrate de destacar que la escuela ofrece TODOS los niveles educativos: desde Maternal y Kinder hasta Carreras y Doctorados si alguien pregunta por las opciones de estudio.
+5. Si te preguntan cosas que no tengan nada que ver con la escuela, di de manera relajada que tus circuitos solo traen la info del ICEST y recomiéndales usar los botones o preguntar por las carreras o campus.
 """
 
 # --- ENCABEZADO DE LA INTERFAZ ---
@@ -159,7 +166,7 @@ CURIOSIDADES = [
     "El lema oficial de la escuela es 'Calidad en educación a tu alcance'. ¡Fue elegido para reflejar el compromiso de llevar educación de nivel a todas partes!",
     "El Hospital San Juan Pablo II del ICEST cuenta con tecnología médica de vanguardia única en el sur de Tamaulipas, donde practican los alumnos de medicina y enfermería.",
     "¡El ICEST está en gran parte de México! Además de Tamaulipas, tiene presencia física en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México.",
-    "¡Identidad ICEST! Los valores principales de la institución que guían a cada alumno son la Honestidad, el Sentido de Responsabilidad y la Vocación de Servicio."
+    "¡Desde los más chiquitos! El ICEST cuenta con una oferta completa que incluye Educación Inicial (Maternal) y Preescolar (Kinder), para cuidar y formar a los niños desde sus primeros pasos."
 ]
 
 if "indice_curiosidad" not in st.session_state:
@@ -183,7 +190,7 @@ with col1:
     if st.button("📜 Historia de Fundación"):
         pregunta_sugerida = "¿Quién fundó el ICEST y en qué año?"
     if st.button("🎓 Oferta Educativa"):
-        pregunta_sugerida = "¿Qué niveles educativos y carreras se pueden estudiar en el ICEST?"
+        pregunta_sugerida = "¿Qué niveles se pueden estudiar en el ICEST? ¿Tienen maternal y kinder?"
 
 with col2:
     if st.button("🏫 Campus y Sedes"):
