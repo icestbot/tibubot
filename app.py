@@ -234,9 +234,9 @@ if user_input_active:
     try:
         if st.session_state.esperando_afirmacion:
             dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
-            respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí*, *Claro* o dale de nuevo al botón)"
+            respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí* o *Claro* )"
         else:
-            client = Groq(api_key=API_KEY_EXPO)
+            client = Groq(api_key=API_KEY_EXPO
             with st.spinner("🤖 Revisando mi base de datos..."):
                 response = client.chat.completions.create(
                     model="llama-3.3-70b-versatile",
