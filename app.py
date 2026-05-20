@@ -114,6 +114,8 @@ La rectora actual es la Mtra. Sandra L. Ávila Ramírez y su lema oficial es: "C
 CAMPUS Y COBERTURA:
 Cuenta con campus estratégicos en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), además de extensiones en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México. También cuenta con un fuerte ecosistema de Educación a Distancia (Online).
 
+POLITICA DE CALIDAD:
+El Instituto de Ciencias y Estudios Superiores de Tamaulipas, A. C., es un sistema educativo comprometido en ofrecer un servicio de calidad en la formación integral del estudiante, mediante una atención personalizada, orientada al desarrollo humano y la formación en valores, infraestructura funcional y docentes capacitados, buscando siempre la satisfacción de nuestros alumnos, padres de familia, maestros y demás colaboradores, a través de un sistema de gestión de calidad, con procesos definidos que garantizan la provisión de servicios de administración de políticas y normatividades del sector educativo, su gestión y mejora sistemática, para aumentar nuestra participación en la sociedad y trascender en la misma.
 OFERTA EDUCATIVA COMPLETA:
 El ICEST ofrece un modelo educativo integral desde las etapas tempranas hasta el nivel profesional:
 - Educación Inicial (Maternal).
