@@ -55,7 +55,7 @@ st.markdown("""
     div.stButton > button {
         background-color: #51AFF7 !important;
         border-radius: 20px !important;
-        border: 2px solid #d4af37 !important;
+        border: 2px solid #4682B4 !important;
         padding: 8px 15px !important;
         font-weight: bold !important;
         transition: all 0.3s ease !important;
