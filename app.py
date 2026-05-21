@@ -4,7 +4,7 @@ from groq import Groq
 # --- CONFIGURACIÓN DE PÁGINA (ESTILO PROFESIONAL) ---
 st.set_page_config(
     page_title="TibuBot - ICEST", 
-    page_icon="🤖", 
+    page_icon="🦈", 
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -150,7 +150,7 @@ REGLAS DE ACTITUD REQUERIDAS:
 """
 
 # --- ENCABEZADO DE LA INTERFAZ ---
-st.markdown('<div class="main-title">🤖 TIBUBOT 🤖</div>', unsafe_allow_html=True)
+st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
 st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>', unsafe_allow_html=True)
 
 # --- BOTÓN DISCRETO DE REINICIAR (ESQUINA SUPERIOR DERECHA) ---
@@ -167,7 +167,7 @@ st.write("¡Bienvenido! Ven a chatear conmigo en tiempo real. Descubre la histor
 # --- MEMORIA INTEGRADA DEL CHAT ---
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "¡Hola! 🤖 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
+        {"role": "assistant", "content": "¡Hola! 🦈 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
     ]
 
 CURIOSIDADES = [
