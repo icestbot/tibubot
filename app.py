@@ -53,7 +53,7 @@ st.markdown("""
 
     /* --- ESTILO SEGURO PARA BOTONES RÁPIDOS --- */
     div.stButton > button {
-        background-color: #00FFFF !important;
+        background-color: #009EE8 !important;
         border-radius: 20px !important;
         border: 2px solid #d4af37 !important;
         padding: 8px 15px !important;
