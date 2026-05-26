@@ -88,6 +88,17 @@ st.markdown("""
         margin-bottom: 25px;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
     }
+    
+    /* CENTRADO DE LA IMAGEN DENTRO DEL CUADRO */
+    .tibu-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+    .tibu-container img {
+        max-width: 180px;
+        height: auto;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -149,24 +160,18 @@ if st.session_state.pantalla == "inicio":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # 3. CUADRO DE INFO INTEGRADO
-    st.markdown('<div class="welcome-box">', unsafe_allow_html=True)
-    
-    # Metemos la imagen usando st.image con el formato .webp corregido
-    col_c, col_tibu, col_d = st.columns([1.2, 1, 1.2])
-    with col_tibu:
-        try:
-            st.image("tibu_idle.webp", use_container_width=True)
-        except:
-            st.write("🦈")
-
+    # 3. CUADRO DE INFO UTILIZANDO HTML PURO AL 100% (Mantiene a Tibu encerrado)
     st.markdown("""
+    <div class="welcome-box">
+        <div class="tibu-container">
+            <img src="app/static/tibu_idle.webp" onerror="this.src='tibu_idle.webp';" />
+        </div>
         <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
         <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
         <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
+    </div>
     """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
     # 4. BOTÓN PERFECTAMENTE CENTRADO ABAJO
     if st.button("¡Empezar a Chatear! 🚀"):
