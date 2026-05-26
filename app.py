@@ -183,12 +183,12 @@ if st.session_state.pantalla == "inicio":
     col_logo1, col_logo2 = st.columns(2)
     with col_logo1:
         try:
-            st.image("logo_icest.png", caption="ICEST", width=180)
+            st.image("logo_icest.png", caption="", width=180)
         except:
             pass
     with col_logo2:
         try:
-            st.image("tibu_idle.png", caption="Tibu el Tiburón", width=150)
+            st.image("tibu_idle.png", caption="", width=150)
         except:
             pass
 
