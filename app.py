@@ -18,7 +18,7 @@ st.markdown("""
     }
     
     /* BLINDAJE DE TEXTO AZUL MARINO */
-    .stApp p, .stApp span, .stApp label, .stApp li, .main-title, .sub-title, .stMarkdown div p, .welcome-box h3 {
+    .stApp p, .stApp span, .stApp label, .stApp li, .main-title, .sub-title, .stMarkdown div p, .welcome-box h3, .welcome-box p {
         color: #002b49 !important;
     }
     
@@ -73,23 +73,14 @@ st.markdown("""
         letter-spacing: 1.5px;
     }
 
-    /* CAJA DE BIENVENIDA Y ALINEACIÓN */
+    /* CAJA DE BIENVENIDA MÁS SEGURA */
     .welcome-box {
         background-color: #eef4f8;
         border: 2px solid #51AFF7;
         border-radius: 20px;
-        padding: 25px;
+        padding: 30px;
         text-align: center;
         margin-bottom: 25px;
-    }
-    .centered-logo {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 15px;
-    }
-    .tibu-img-box {
-        border-radius: 15px;
-        margin-bottom: 15px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -152,27 +143,30 @@ if st.session_state.pantalla == "inicio":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # 3. CUADRO DE INFO CON TIBU DENTRO
-    with st.container():
-        st.markdown('<div class="welcome-box">', unsafe_allow_html=True)
-        
-        # Imagen de Tibu dentro del cuadro
-        col_c, col_tibu, col_d = st.columns([1, 1, 1])
-        with col_tibu:
-            try:
-                st.image("tibu_idle.webp", use_container_width=True)
-            except:
-                st.write("🦈")
-        
-        st.markdown("""
-            <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
-            <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
-            <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio.</p>
-            <p style="font-size: 13px; color: #4682B4;"><b>Equipo de desarrollo:</b> Felipe, Gerardo y Emmet.</p>
-        """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+    # 3. CUADRO DE INFO COMPLETAMENTE INTEGRADO
+    # Abrimos la caja con HTML
+    st.markdown('<div class="welcome-box">', unsafe_allow_html=True)
+    
+    # Ponemos las columnas de Streamlit dentro del contenedor de la caja
+    col_c, col_tibu, col_d = st.columns([1, 1, 1])
+    with col_tibu:
+        try:
+            st.image("tibu_idle.webp", use_container_width=True)
+        except:
+            st.write("🦈")
+            
+    # El texto descriptivo
+    st.markdown("""
+        <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
+        <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
+        <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
+        <p style="font-size: 13px; color: #4682B4; margin-top: 15px;"><b>Equipo de desarrollo:</b> Felipe, Gerardo y Emmet.</p>
+    """, unsafe_allow_html=True)
+    
+    # Cerramos la caja justo al final del texto para asegurar que todo quede adentro
+    st.markdown('</div>', unsafe_allow_html=True)
 
-    # 4. BOTÓN CENTRADO
+    # 4. BOTÓN CENTRADO ABAJO
     col_e, col_btn, col_f = st.columns([1, 2, 1])
     with col_btn:
         if st.button("¡Empezar a Chatear! 🚀"):
@@ -205,7 +199,7 @@ elif st.session_state.pantalla == "chat":
     with col1:
         if st.button("📜 Historia"): pregunta_sugerida = "¿Quién fundó el ICEST?"
     with col2:
-        if st.button("✨ Curiosidad"): disparar_curiosidad = True; pregunta_sugerida = "¡Cuéntame algo curioso!"
+        if st.button("✨ Curiosidad"): pregunta_sugerida = "¡Cuéntame algo curioso!"
 
     captura = st.chat_input("Escribe tu pregunta...")
     user_input = captura if captura else pregunta_sugerida
