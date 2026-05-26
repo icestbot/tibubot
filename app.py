@@ -2,7 +2,7 @@ import streamlit as st
 from groq import Groq
 import base64
 
-# --- CONFIGURACIÓN DE PÁGINA ---
+# --- CONFIGURACIÓN DE PÁGINA (ESTILO PROFESIONAL) ---
 st.set_page_config(
     page_title="TibuBot - ICEST", 
     page_icon="🦈", 
@@ -10,7 +10,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- INYECCIÓN DE CSS PERSONALIZADO (BLINDAJE Y ACOMODO VISUAL) ---
+# --- INYECCIÓN DE CSS PERSONALIZADO (BLINDAJE DE COLORES ANTI-MODO OSCURO) ---
 st.markdown("""
 <style>
     /* Forzar fondo claro */
@@ -18,66 +18,98 @@ st.markdown("""
         background-color: #fafbfc !important;
     }
     
-    /* BLINDAJE DE TEXTO AZUL MARINO */
+    /* BLINDAJE CONTRA LETRAS INVISIBLES: Obliga a todo texto común a ser azul marino */
     .stApp p, .stApp span, .stApp label, .stApp li, .main-title, .sub-title, .stMarkdown div p, .welcome-box h3, .welcome-box p {
         color: #002b49 !important;
     }
     
-    /* ESTILO DE BURBUJAS DE CHAT */
+    /* Contenedores de chat generales */
     .stChatMessage {
         border-radius: 15px !important;
         padding: 15px !important;
         margin-bottom: 12px !important;
     }
+    
+    /* Chat del asistente (Azul ICEST suave) con texto forzado oscuro */
     .stChatMessage[data-testid="stChatMessageAssistant"] {
         background-color: #eef4f8 !important;
         border-left: 5px solid #002b49 !important;
     }
+    .stChatMessage[data-testid="stChatMessageAssistant"] p,
+    .stChatMessage[data-testid="stChatMessageAssistant"] span,
+    .stChatMessage[data-testid="stChatMessageAssistant"] div {
+        color: #002b49 !important;
+    }
+
+    /* Chat del usuario (Oro suave) con texto forzado oscuro */
     .stChatMessage[data-testid="stChatMessageUser"] {
         background-color: #fffaf0 !important;
         border-left: 5px solid #d4af37 !important;
     }
+    .stChatMessage[data-testid="stChatMessageUser"] p,
+    .stChatMessage[data-testid="stChatMessageUser"] span,
+    .stChatMessage[data-testid="stChatMessageUser"] div {
+        color: #002b49 !important;
+    }
 
-    /* CENTRADO ULTRA DEL BOTÓN EN EMPEZAR */
+    /* --- ESTILO SEGURO PARA BOTONES RÁPIDOS Y DE INICIO --- */
     [data-testid="stButton"] {
         display: flex !important;
         justify-content: center !important;
         align-items: center !important;
         width: 100% !important;
     }
-    
+
     div.stButton > button {
         background-color: #51AFF7 !important;
         border-radius: 20px !important;
         border: 2px solid #4682B4 !important;
-        padding: 12px 35px !important;
+        padding: 8px 15px !important;
         font-weight: bold !important;
-        color: #ffffff !important;
-        width: 100% !important;
-        max-width: 280px !important;
         transition: all 0.3s ease !important;
+        width: 100% !important;
     }
     
+    /* Forzar a que el texto interno de los botones sea siempre blanco */
+    div.stButton > button div, 
+    div.stButton > button span, 
+    div.stButton > button p {
+        color: #ffffff !important;
+    }
+    
+    /* Efecto Hover (pasar el dedo o mouse) */
     div.stButton > button:hover {
         background-color: #d4af37 !important;
+        transform: scale(1.02);
+    }
+    
+    div.stButton > button:hover div, 
+    div.stButton > button:hover span, 
+    div.stButton > button:hover p {
         color: #002b49 !important;
-        transform: scale(1.05);
     }
 
-    /* TÍTULOS */
+    /* Diseño específico para el botón gigante de la pantalla de inicio */
+    .btn-inicio button {
+        padding: 12px 35px !important;
+        max-width: 280px !important;
+    }
+
+    /* Títulos principales */
     .main-title {
-        text-align: center;
-        margin-top: 10px;
-        margin-bottom: 5px;
-        font-size: 42px;
+        color: #002b49 !important;
         font-family: 'Georgia', serif;
         font-weight: bold;
+        text-align: center;
+        margin-bottom: 5px;
+        font-size: 38px;
     }
+    
     .sub-title {
         color: #d4af37 !important;
         text-align: center;
         font-size: 18px;
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 1.5px;
@@ -118,44 +150,58 @@ CAMPUS Y COBERTURA:
 Cuenta con campus estratégicos en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), además de extensiones en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México. También cuenta con un fuerte ecosistema de Educación a Distancia (Online).
 
 POLITICA DE CALIDAD:
-El Instituto de Ciencias y Estudios Superiores de Tamaulipas, A. C., es un sistema educativo comprometido en ofrecer un servicio de calidad en la formación integral del estudiante, mediante una atención personalizada, orientada al desarrollo humano y la formación en valores, infraestructura funcional y docentes capacitados, buscando siempre la satisfacción de nuestros alumnos, padres de familia, maestros y demás colaboradores.
+El Instituto de Ciencias y Estudios Superiores de Tamaulipas, A. C., es un sistema educativo comprometido en ofrecer un servicio de calidad en la formación integral del estudiante, mediante una atención personalizada, orientada al desarrollo humano y la formación en valores, infraestructura funcional y docentes capacitados, buscando siempre la satisfacción de nuestros alumnos, padres de familia, maestros y demás colaboradores, a través de un sistema de gestión de calidad, con procesos definidos que garantizan la provisión de servicios de administración de políticas y normatividades del sector educativo, su gestión y mejora sistemática, para aumentar nuestra participación en la sociedad y trascender en la misma.
 
 OFERTA EDUCATIVA COMPLETA:
-Educación Inicial (Maternal), Preescolar (Kinder), Primaria, Secundaria, Bachillerato, Licenciaturas, Ingenierías y Posgrados.
+El ICEST ofrece un modelo educativo integral desde las etapas tempranas hasta el nivel profesional:
+- Educación Inicial (Maternal).
+- Educación Preescolar (Kinder).
+- Primaria y Secundaria.
+- Bachillerato (General y Tecnológico con diversas especialidades).
+- Licenciaturas e Ingenierías de gran prestigio, especially en Ciencias de la Salud (Medicina, Enfermería, Odontología, Nutrición, Psicología), así como en Negocios, Ciencias Sociales, Hospitalidad y Tecnologías Avanzadas.
+- Posgrados (Especialidades, Maestrías y Doctorados) y Educación Continua.
+
+PROCESO DE ADMISIÓN:
+Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) y la institution ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
+
+HOSPITAL Y MUSEO:
+La familia ICEST respalda su calidad educativa con proyectos de alto impacto como el Hospital San Juan Pablo II (complejo médico de alta tecnología para la práctica de sus alumnos) y el Museo del Automóvil y el Transporte en Tampico, que alberga una de las colecciones de autos históricos más importantes de todo México.
 """
 
 INFO_EXTRA = """
 INFORMACIÓN ADICIONAL DEL PROYECTO:
-- Desarrollado para la Expo de Robótica de la Secundaria Francisco Javier Clavijero.
-- Creadores: Felipe, Gerardo y Emmet.
+- Puedes agregar aquí especificaciones de los circuitos, detalles del stand o cualquier dato de última hora que necesites.
 """
 
 CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
-
-# --- LISTA DE CURIOSIDADES ---
-CURIOSIDADES = [
-    "¿Sabías que el ICEST empezó hace más de 45 años en 1979? ¡Tiene mucha historia!",
-    "¿Sabías que el ICEST tiene campus no solo en Tamaulipas, sino también en Veracruz, Nuevo León y San Luis Potosí?",
-    "¿Sabías que nuestro lema es 'Calidad en educación a tu alcance'? ¡Está pensado para todos!",
-    "¿Sabías que en el ICEST puedes estudiar desde que eres un bebé en Maternal hasta hacer un Doctorado? ¡Todo el camino completo!",
-    "¿Sabías que este chatbot 'Tibu' fue programado especialmente para la Expo de Robótica de nuestra querida Secundaria Clavijero?"
-]
 
 # --- INSTRUCCIONES DEL CHATBOT ---
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
 Tu objetivo es dar información sobre el ICEST usando estos datos: {CONTEXTO_COMPLETO}.
 
-REGLAS:
-1. Actúa natural y amigable. 
-2. No repitas tu nombre en cada respuesta. 
-3. Sé directo y conciso pero útil.
-4. te llamas TIBU eres un tiburon, la imagen de icest ,tu eres asistente de robotica de la secundaria Franscisco Javier Clavijero.
-5. Creado por 8 alumnos, especialmente por: "felipe guapo","gerardo" y "emmet".
-6. Menciona la escuela como ICEST.
+REGLAS DE ACTITUD REQUERIDAS:
+1. Actúa de forma natural, amigable y conversacional. No suenes robótico ni aburrido.
+2. REGLA ESTRICTA: No repitas tu nombre ("Tibu") ni digas "Soy Tibu" en cada respuesta. Solo te presentaste al inicio y ya está. Habla directamente sobre lo que te preguntan.
+3. Sé medio directo y conciso. No avientes textos gigantescos pero no tan cortos ; la gente en el stand prefiere respuestas fáciles de leer pero utiles.
+4. Asegúrate de destacar que la escuela ofrece TODOS los niveles educativos: desde Maternal y Kinder hasta Carreras y Doctorados si alguien pregunta por las opciones de estudio.
+5. Si te preguntan cosas que no tengan nada que ver con la escuela, di de manera relajada que tus circuitos solo traen la info del ICEST y recomiéndales usar los botones o preguntar por las carreras o campus.
+6. te llamas TIBU eres un tiburon, la imagen de icest ,tu eres asistente de robotica de la secundaria Franscisco Javier Clavijero
+7. fuiste creado por un grupo de robotica conformado por 8 alumnos: wendolyne, cavazos, rafael, karla, quintero. y tu fuiste creado mayormente por: "felipe guapo","gerardo"y "emmet".  pero solo dilo si te preguntan
+8. no digas el nombre de la escuela completo solo mencionala como ICEST
+9. no digas cosas tan largas pero tampoco tan cortas
 """
 
-# --- CONTROL DE PANTALLAS Y VARIABLES DE ESTADO ---
+CURIOSIDADES = [
+    "¿Sabías que el Museo del Automóvil del ICEST es de los más importantes del país? ¡Tiene autos clásicos reales que datan desde los inicios del transporte!",
+    "¡El ICEST nació el 16 de abril de 1979! Empezó solo con bachillerato y carreras técnicas, y hoy tiene hasta complejos hospitalarios de primer nivel.",
+    "El lema oficial de la escuela es 'Calidad en educación a tu alcance'. ¡Fue elegido para reflejar el compromiso de llevar educación de nivel a todas partes!",
+    "El Hospital San Juan Pablo II del ICEST cuenta con tecnología médica de vanguardia única en el sur de Tamaulipas, donde practican los alumnos de medicina y enfermería.",
+    "¡El ICEST está en gran parte de México! Además de Tamaulipas, tiene presencia física en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México.",
+    "¡Desde los más chiquitos! El ICEST cuenta con una oferta completa que incluye Educación Inicial (Maternal) y Preescolar (Kinder), para cuidar y formar a los niños desde sus primeros pasos."
+]
+
+# --- CONTROL DE PANTALLAS ---
 if "pantalla" not in st.session_state:
     st.session_state.pantalla = "inicio"
 if "indice_curiosidad" not in st.session_state:
@@ -163,7 +209,9 @@ if "indice_curiosidad" not in st.session_state:
 if "esperando_afirmacion" not in st.session_state:
     st.session_state.esperando_afirmacion = False
 
-# --- PANTALLA 1: INICIO ---
+# ==========================================
+# --- PANTALLA 1: INICIO (CON TIBU SEGURO) ---
+# ==========================================
 if st.session_state.pantalla == "inicio":
     col_a, col_logo, col_b = st.columns([1, 1.5, 1])
     with col_logo:
@@ -195,91 +243,107 @@ if st.session_state.pantalla == "inicio":
     </div>
     """, unsafe_allow_html=True)
 
-    col_l, col_btn, col_r = st.columns([1, 2, 1])
-    with col_btn:
-        if st.button("¡Empezar a Chatear! 🚀"):
-            st.session_state.pantalla = "chat"
-            st.rerun()
+    # Botón de entrada con la clase especial para centrarse
+    st.markdown('<div class="btn-inicio">', unsafe_allow_html=True)
+    if st.button("¡Empezar a Chatear! 🚀"):
+        st.session_state.pantalla = "chat"
+        st.rerun()
+    st.markdown('</div>', unsafe_allow_html=True)
 
-# --- PANTALLA 2: CHAT ---
+# ==========================================
+# --- PANTALLA 2: TU INTERFAZ DE CHAT REAL ---
+# ==========================================
 elif st.session_state.pantalla == "chat":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-title">Asistente Virtual ICEST</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>', unsafe_allow_html=True)
 
+    # --- BOTÓN DISCRETO DE REINICIAR (ESQUINA SUPERIOR DERECHA) ---
     col_espacio, col_reset = st.columns([4, 1])
     with col_reset:
-        if st.button("🗑️ Reset"):
-            st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres platicar?"}]
+        if st.button("🗑️ Reiniciar"):
+            st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres que platicamos ahora?"}]
             st.session_state.indice_curiosidad = 0
             st.session_state.esperando_afirmacion = False
             st.rerun()
 
+    st.write("¡Bienvenido! Ven a chatear conmigo en tiempo real. Descubre la historia, los campus y los datos más interesantes de nuestra escuela.")
+
+    # --- MEMORIA INTEGRADA DEL CHAT ---
     if "messages" not in st.session_state:
-        st.session_state.messages = [{"role": "assistant", "content": "¡Hola! 🦈 Soy Tibu. ¿Qué te gustaría saber sobre el ICEST?"}]
+        st.session_state.messages = [
+            {"role": "assistant", "content": "¡Hola! 🦈 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
+        ]
 
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-    # BOTONES RÁPIDOS
+    # --- SECCIÓN DE BOTONES RÁPIDOS (TU INTERFAZ ANTERIOR INTEGRAL) ---
+    st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
     col1, col2 = st.columns(2)
     pregunta_sugerida = None
     disparar_curiosidad = False
 
     with col1:
-        if st.button("📜 Oferta Educativa"): 
-            pregunta_sugerida = "¿Cuál es la oferta educativa completa del ICEST?"
+        if st.button("📜 Historia de Fundación"):
+            pregunta_sugerida = "¿Quién fundó el ICEST y en qué año?"
+        if st.button("🎓 Oferta Educativa"):
+            pregunta_sugerida = "¿Qué niveles se pueden estudiar en el ICEST? ¿Tienen maternal y kinder?"
+
     with col2:
-        if st.button("✨ Curiosidad"): 
+        if st.button("🏫 Campus y Sedes"):
+            pregunta_sugerida = "¿Cuáles son los campus y estados donde tiene presencia el ICEST?"
+        if st.button("✨ Datos Curiosos"):
             disparar_curiosidad = True
 
-    captura = st.chat_input("Escribe tu pregunta...")
-    user_input = captura if captura else pregunta_sugerida
-
-    # LÓGICA DE DATOS CURIOSOS
-    if disparar_curiosidad:
-        idx = st.session_state.indice_curiosidad
-        dato = CURIOSIDADES[idx]
-        st.session_state.messages.append({"role": "user", "content": "¡Cuéntame algo curioso!"})
-        
-        sig_idx = (idx + 1) % len(CURIOSIDADES)
-        st.session_state.indice_curiosidad = sig_idx
-        
-        respuesta_tibu = f"{dato} 🤩 ¿Te gustaría que te cuente otro dato curioso o prefieres preguntar algo más?"
-        st.session_state.messages.append({"role": "assistant", "content": respuesta_tibu})
+    user_input_active = None
+    if pregunta_sugerida:
+        st.session_state.messages.append({"role": "user", "content": pregunta_sugerida})
+        user_input_active = pregunta_sugerida
+    elif disparar_curiosidad:
+        user_input_active = "¡Cuéntame un dato curioso!"
         st.session_state.esperando_afirmacion = True
-        st.rerun()
+    else:
+        captura_chat = st.chat_input("Escribe tu pregunta aquí...")
+        if captura_chat:
+            user_input_active = captura_chat
 
-    elif user_input:
-        # Si el bot estaba esperando saber si querías más datos curiosos
-        if st.session_state.esperando_afirmacion and user_input.lower() in ["si", "sí", "obvio", "va", "otro", "cuéntame otro", "cuenta otro"]:
-            st.session_state.esperando_afirmacion = False
-            idx = st.session_state.indice_curiosidad
-            dato = CURIOSIDADES[idx]
-            st.session_state.messages.append({"role": "user", "content": user_input})
-            
-            sig_idx = (idx + 1) % len(CURIOSIDADES)
-            st.session_state.indice_curiosidad = sig_idx
-            
-            respuesta_tibu = f"{dato} 🦈 ¿Quieres otra curiosidad?"
-            st.session_state.messages.append({"role": "assistant", "content": respuesta_tibu})
-            st.session_state.esperando_afirmacion = True
-            st.rerun()
-        else:
-            st.session_state.esperando_afirmacion = False
-            st.session_state.messages.append({"role": "user", "content": user_input})
-            with st.chat_message("user"): 
-                st.write(user_input)
+    if user_input_active and not pregunta_sugerida and not disparar_curiosidad:
+        if st.session_state.esperando_afirmacion:
+            texto_usuario = user_input_active.lower().strip()
+            if texto_usuario in ["si", "sí", "claro", "por supuesto", "otra", "siguiente", "ok", "va", "simon", "dale"]:
+                st.session_state.indice_curiosidad = (st.session_state.indice_curiosidad + 1) % len(CURIOSIDADES)
+            else:
+                st.session_state.esperando_afirmacion = False
 
-            client = Groq(api_key=API_KEY_EXPO)
-            with st.spinner("🤖 Tibu pensando..."):
-                response = client.chat.completions.create(
-                    model="llama-3.3-70b-versatile",
-                    messages=[{"role": "system", "content": SYSTEM_PROMPT}] + st.session_state.messages
-                )
-                respuesta = response.choices[0].message.content
-            
-            with st.chat_message("assistant"): 
-                st.write(respuesta)
-            st.session_state.messages.append({"role": "assistant", "content": respuesta})
+    # --- PROCESAMIENTO CON LA API DE GROQ ---
+    if user_input_active:
+        if not pregunta_sugerida and not disparar_curiosidad:
+            st.session_state.messages.append({"role": "user", "content": user_input_active})
+        
+        with st.chat_message("user"):
+            st.write(user_input_active)
+
+        try:
+            if st.session_state.esperando_afirmacion:
+                dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
+                respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí* o *Claro* )"
+            else:
+                client = Groq(api_key=API_KEY_EXPO)
+                with st.spinner("🤖 Revisando mi base de datos..."):
+                    response = client.chat.completions.create(
+                        model="llama-3.3-70b-versatile",
+                        messages=[
+                            {"role": "system", "content": SYSTEM_PROMPT},
+                            {"role": "user", "content": user_input_active}
+                        ],
+                    )
+                    respuesta_robot = response.choices[0].message.content
+
+            with st.chat_message("assistant"):
+                st.write(respuesta_robot)
+            st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
             st.rerun()
+
+        except Exception as e:
+            st.error(f"⚠️ Detalle técnico en la conexión: {e}")
