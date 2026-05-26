@@ -162,7 +162,7 @@ El ICEST ofrece un modelo educativo integral desde las etapas tempranas hasta el
 - Posgrados (Especialidades, Maestrías y Doctorados) y Educación Continua.
 
 PROCESO DE ADMISIÓN:
-Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) y la institution ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
+Para inscribirse, los interesados pueden acudir directamente al campus de su elección o iniciar su registro digital en su portal web. Se requiere la documentación escolar básica (acta de nacimiento, certificados previos, CURP) and la institution ofrece revalidación y equivalencia de estudios para alumnos que vienen de otras escuelas.
 
 HOSPITAL Y MUSEO:
 La familia ICEST respalda su calidad educativa con proyectos de alto impacto como el Hospital San Juan Pablo II (complejo médico de alta tecnología para la práctica de sus alumnos) y el Museo del Automóvil y el Transporte en Tampico, que alberga una de las colecciones de autos históricos más importantes de todo México.
@@ -213,6 +213,7 @@ if "esperando_afirmacion" not in st.session_state:
 # --- PANTALLA 1: INICIO (CON TIBU SEGURO) ---
 # ==========================================
 if st.session_state.pantalla == "inicio":
+    # Logo centrado
     col_a, col_logo, col_b = st.columns([1, 1.5, 1])
     with col_logo:
         try:
@@ -243,7 +244,6 @@ if st.session_state.pantalla == "inicio":
     </div>
     """, unsafe_allow_html=True)
 
-    # Botón de entrada con la clase especial para centrarse
     st.markdown('<div class="btn-inicio">', unsafe_allow_html=True)
     if st.button("¡Empezar a Chatear! 🚀"):
         st.session_state.pantalla = "chat"
@@ -254,6 +254,14 @@ if st.session_state.pantalla == "inicio":
 # --- PANTALLA 2: TU INTERFAZ DE CHAT REAL ---
 # ==========================================
 elif st.session_state.pantalla == "chat":
+    # 1. LOGO INTEGRADO ARRIBA DEL CHAT
+    col_chat_a, col_chat_logo, col_chat_b = st.columns([1, 1.5, 1])
+    with col_chat_logo:
+        try:
+            st.image("logo_icest.png", use_container_width=True)
+        except:
+            pass
+
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>', unsafe_allow_html=True)
 
@@ -278,7 +286,7 @@ elif st.session_state.pantalla == "chat":
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-    # --- SECCIÓN DE BOTONES RÁPIDOS (TU INTERFAZ ANTERIOR INTEGRAL) ---
+    # --- SECCIÓN DE BOTONES RÁPIDOS ---
     st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
     col1, col2 = st.columns(2)
     pregunta_sugerida = None
