@@ -1,5 +1,6 @@
 import streamlit as st
 from groq import Groq
+import base64
 
 # --- CONFIGURACIÓN DE PÁGINA (ESTILO PROFESIONAL) ---
 st.set_page_config(
@@ -41,6 +42,7 @@ st.markdown("""
     div.stButton {
         display: flex;
         justify-content: center;
+        width: 100%;
     }
     div.stButton > button {
         background-color: #51AFF7 !important;
@@ -89,7 +91,7 @@ st.markdown("""
         box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
     }
     
-    /* CENTRADO DE LA IMAGEN DENTRO DEL CUADRO */
+    /* CENTRADO DE LA IMAGEN EN EL HTML */
     .tibu-container {
         display: flex;
         justify-content: center;
@@ -160,11 +162,20 @@ if st.session_state.pantalla == "inicio":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # 3. CUADRO DE INFO UTILIZANDO HTML PURO AL 100% (Mantiene a Tibu encerrado)
-    st.markdown("""
+    # TRUCO DE BLINDAJE: Convertir tibu_idle.webp a base64 para meterla de forma segura al HTML
+    tibu_html_tag = "🦈"
+    try:
+        with open("tibu_idle.webp", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode()
+            tibu_html_tag = f'<img src="data:image/webp;base64,{encoded_string}" />'
+    except:
+        pass
+
+    # 3. CUADRO DE INFO UTILIZANDO HTML PURO AL 100%
+    st.markdown(f"""
     <div class="welcome-box">
         <div class="tibu-container">
-            <img src="app/static/tibu_idle.webp" onerror="this.src='tibu_idle.webp';" />
+            {tibu_html_tag}
         </div>
         <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
         <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
