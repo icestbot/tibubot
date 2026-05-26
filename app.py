@@ -37,21 +37,26 @@ st.markdown("""
         border-left: 5px solid #d4af37 !important;
     }
 
-    /* BOTONES ESTILO PRO */
+    /* BOTONES ESTILO PRO CENTRADOS */
+    div.stButton {
+        display: flex;
+        justify-content: center;
+    }
     div.stButton > button {
         background-color: #51AFF7 !important;
         border-radius: 20px !important;
         border: 2px solid #4682B4 !important;
-        padding: 10px 20px !important;
+        padding: 10px 30px !important;
         font-weight: bold !important;
         color: #ffffff !important;
-        width: 100%;
+        width: auto !important;
+        min-width: 250px;
         transition: all 0.3s ease;
     }
     div.stButton > button:hover {
         background-color: #d4af37 !important;
         color: #002b49 !important;
-        transform: scale(1.02);
+        transform: scale(1.05);
     }
 
     /* TÍTULOS */
@@ -73,7 +78,7 @@ st.markdown("""
         letter-spacing: 1.5px;
     }
 
-    /* CAJA DE BIENVENIDA MÁS SEGURA */
+    /* CONTENEDOR DE LA PORTADA */
     .welcome-box {
         background-color: #eef4f8;
         border: 2px solid #51AFF7;
@@ -81,6 +86,18 @@ st.markdown("""
         padding: 30px;
         text-align: center;
         margin-bottom: 25px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
+    }
+    
+    .img-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+    
+    .img-container img {
+        max-width: 200px;
+        height: auto;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -131,47 +148,36 @@ if "pantalla" not in st.session_state:
 
 # --- PANTALLA 1: INICIO ---
 if st.session_state.pantalla == "inicio":
-    # 1. LOGO CENTRADO ARRIBA
-    col_a, col_logo, col_b = st.columns([1, 2, 1])
+    # 1. LOGO CENTRADO ARRIBA (Usando columnas limpias de Streamlit)
+    col_a, col_logo, col_b = st.columns([1, 1.5, 1])
     with col_logo:
         try:
             st.image("logo_icest.png", use_container_width=True)
         except:
-            st.write("*(Sube logo_icest.png a GitHub)*")
+            pass # Si no encuentra el logo, pasa sin romper la pantalla
 
     # 2. TÍTULOS
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # 3. CUADRO DE INFO COMPLETAMENTE INTEGRADO
-    # Abrimos la caja con HTML
-    st.markdown('<div class="welcome-box">', unsafe_allow_html=True)
-    
-    # Ponemos las columnas de Streamlit dentro del contenedor de la caja
-    col_c, col_tibu, col_d = st.columns([1, 1, 1])
-    with col_tibu:
-        try:
-            st.image("tibu_idle.webp", use_container_width=True)
-        except:
-            st.write("🦈")
-            
-    # El texto descriptivo
+    # 3. CUADRO DE INFO INTEGRADO EN HTML PURO (Cero errores de renderizado)
+    # Si subiste "tibu_idle.png" a GitHub, el HTML la jalará directo. Si no, saltará al texto automáticamente.
     st.markdown("""
+    <div class="welcome-box">
+        <div class="img-container">
+            <img src="app/static/tibu_idle.webp" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/1/15/No_image_available_svg.svg'; this.style.display='none';" />
+        </div>
         <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
         <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
-        <p style="font-size: 13px; color: #4682B4; margin-top: 15px;"><b>Equipo de desarrollo:</b> Felipe, Gerardo y Emmet.</p>
+        <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
+    </div>
     """, unsafe_allow_html=True)
-    
-    # Cerramos la caja justo al final del texto para asegurar que todo quede adentro
-    st.markdown('</div>', unsafe_allow_html=True)
 
-    # 4. BOTÓN CENTRADO ABAJO
-    col_e, col_btn, col_f = st.columns([1, 2, 1])
-    with col_btn:
-        if st.button("¡Empezar a Chatear! 🚀"):
-            st.session_state.pantalla = "chat"
-            st.rerun()
+    # 4. BOTÓN PERFECTAMENTE CENTRADO ABAJO
+    if st.button("¡Empezar a Chatear! 🚀"):
+        st.session_state.pantalla = "chat"
+        st.rerun()
 
 # --- PANTALLA 2: CHAT ---
 elif st.session_state.pantalla == "chat":
@@ -182,8 +188,6 @@ elif st.session_state.pantalla == "chat":
     with col_reset:
         if st.button("🗑️ Reset"):
             st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres platicar?"}]
-            st.session_state.indice_curiosidad = 0
-            st.session_state.esperando_afirmacion = False
             st.rerun()
 
     if "messages" not in st.session_state:
