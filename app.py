@@ -88,17 +88,6 @@ st.markdown("""
         margin-bottom: 25px;
         box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
     }
-    
-    .img-container {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-    
-    .img-container img {
-        max-width: 200px;
-        height: auto;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -148,31 +137,36 @@ if "pantalla" not in st.session_state:
 
 # --- PANTALLA 1: INICIO ---
 if st.session_state.pantalla == "inicio":
-    # 1. LOGO CENTRADO ARRIBA (Usando columnas limpias de Streamlit)
+    # 1. LOGO CENTRADO ARRIBA
     col_a, col_logo, col_b = st.columns([1, 1.5, 1])
     with col_logo:
         try:
             st.image("logo_icest.png", use_container_width=True)
         except:
-            pass # Si no encuentra el logo, pasa sin romper la pantalla
+            pass
 
     # 2. TÍTULOS
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # 3. CUADRO DE INFO INTEGRADO EN HTML PURO (Cero errores de renderizado)
-    # Si subiste "tibu_idle.png" a GitHub, el HTML la jalará directo. Si no, saltará al texto automáticamente.
+    # 3. CUADRO DE INFO INTEGRADO
+    st.markdown('<div class="welcome-box">', unsafe_allow_html=True)
+    
+    # Metemos la imagen usando st.image con el formato .webp corregido
+    col_c, col_tibu, col_d = st.columns([1.2, 1, 1.2])
+    with col_tibu:
+        try:
+            st.image("tibu_idle.webp", use_container_width=True)
+        except:
+            st.write("🦈")
+
     st.markdown("""
-    <div class="welcome-box">
-        <div class="img-container">
-            <img src="app/static/tibu_idle.webp" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/1/15/No_image_available_svg.svg'; this.style.display='none';" />
-        </div>
         <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
         <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
         <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
-    </div>
     """, unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     # 4. BOTÓN PERFECTAMENTE CENTRADO ABAJO
     if st.button("¡Empezar a Chatear! 🚀"):
