@@ -38,24 +38,25 @@ st.markdown("""
         border-left: 5px solid #d4af37 !important;
     }
 
-    /* BOTONES ESTILO PRO CENTRADOS */
-    div.stButton {
-        display: flex;
-        justify-content: center;
-        width: 100%;
+    /* --- CENTRADO ABSOLUTO DEL BOTÓN EN STREAMLIT --- */
+    .stButton {
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+        margin-top: 10px !important;
     }
-    div.stButton > button {
+    .stButton > button {
         background-color: #51AFF7 !important;
         border-radius: 20px !important;
         border: 2px solid #4682B4 !important;
-        padding: 10px 30px !important;
+        padding: 12px 35px !important;
         font-weight: bold !important;
         color: #ffffff !important;
         width: auto !important;
-        min-width: 250px;
-        transition: all 0.3s ease;
+        min-width: 260px !important;
+        transition: all 0.3s ease !important;
     }
-    div.stButton > button:hover {
+    .stButton > button:hover {
         background-color: #d4af37 !important;
         color: #002b49 !important;
         transform: scale(1.05);
