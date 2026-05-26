@@ -38,25 +38,27 @@ st.markdown("""
         border-left: 5px solid #d4af37 !important;
     }
 
-    /* --- CENTRADO ABSOLUTO DEL BOTÓN EN STREAMLIT --- */
-    .stButton {
+    /* --- BLINDAJE ULTRA PARA CENTRAR EL BOTÓN --- */
+    [data-testid="stButton"] {
         display: flex !important;
         justify-content: center !important;
+        align-items: center !important;
         width: 100% !important;
-        margin-top: 10px !important;
     }
-    .stButton > button {
+    
+    div.stButton > button {
         background-color: #51AFF7 !important;
         border-radius: 20px !important;
         border: 2px solid #4682B4 !important;
         padding: 12px 35px !important;
         font-weight: bold !important;
         color: #ffffff !important;
-        width: auto !important;
-        min-width: 260px !important;
+        width: 100% !important; /* Llena el contenedor asignado en la columna */
+        max-width: 280px !important;
         transition: all 0.3s ease !important;
     }
-    .stButton > button:hover {
+    
+    div.stButton > button:hover {
         background-color: #d4af37 !important;
         color: #002b49 !important;
         transform: scale(1.05);
@@ -185,10 +187,12 @@ if st.session_state.pantalla == "inicio":
     </div>
     """, unsafe_allow_html=True)
 
-    # 4. BOTÓN PERFECTAMENTE CENTRADO ABAJO
-    if st.button("¡Empezar a Chatear! 🚀"):
-        st.session_state.pantalla = "chat"
-        st.rerun()
+    # 4. BOTÓN CON DOBLE FILTRO DE CENTRADO (CSS Avanzado + Columnas Python)
+    col_l, col_btn, col_r = st.columns([1, 2, 1])
+    with col_btn:
+        if st.button("¡Empezar a Chatear! 🚀"):
+            st.session_state.pantalla = "chat"
+            st.rerun()
 
 # --- PANTALLA 2: CHAT ---
 elif st.session_state.pantalla == "chat":
