@@ -2,7 +2,7 @@ import streamlit as st
 from groq import Groq
 import base64
 
-# --- CONFIGURACIÓN DE PÁGINA (ESTILO PROFESIONAL) ---
+# --- CONFIGURACIÓN DE PÁGINA ---
 st.set_page_config(
     page_title="TibuBot - ICEST", 
     page_icon="🦈", 
@@ -38,7 +38,7 @@ st.markdown("""
         border-left: 5px solid #d4af37 !important;
     }
 
-    /* --- BLINDAJE ULTRA PARA CENTRAR EL BOTÓN --- */
+    /* CENTRADO ULTRA DEL BOTÓN EN EMPEZAR */
     [data-testid="stButton"] {
         display: flex !important;
         justify-content: center !important;
@@ -53,7 +53,7 @@ st.markdown("""
         padding: 12px 35px !important;
         font-weight: bold !important;
         color: #ffffff !important;
-        width: 100% !important; /* Llena el contenedor asignado en la columna */
+        width: 100% !important;
         max-width: 280px !important;
         transition: all 0.3s ease !important;
     }
@@ -94,7 +94,6 @@ st.markdown("""
         box-shadow: 0px 4px 10px rgba(0,0,0,0.05);
     }
     
-    /* CENTRADO DE LA IMAGEN EN EL HTML */
     .tibu-container {
         display: flex;
         justify-content: center;
@@ -133,6 +132,15 @@ INFORMACIÓN ADICIONAL DEL PROYECTO:
 
 CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
 
+# --- LISTA DE CURIOSIDADES ---
+CURIOSIDADES = [
+    "¿Sabías que el ICEST empezó hace más de 45 años en 1979? ¡Tiene mucha historia!",
+    "¿Sabías que el ICEST tiene campus no solo en Tamaulipas, sino también en Veracruz, Nuevo León y San Luis Potosí?",
+    "¿Sabías que nuestro lema es 'Calidad en educación a tu alcance'? ¡Está pensado para todos!",
+    "¿Sabías que en el ICEST puedes estudiar desde que eres un bebé en Maternal hasta hacer un Doctorado? ¡Todo el camino completo!",
+    "¿Sabías que este chatbot 'Tibu' fue programado especialmente para la Expo de Robótica de nuestra querida Secundaria Clavijero?"
+]
+
 # --- INSTRUCCIONES DEL CHATBOT ---
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
@@ -147,13 +155,16 @@ REGLAS:
 6. Menciona la escuela como ICEST.
 """
 
-# --- CONTROL DE PANTALLAS ---
+# --- CONTROL DE PANTALLAS Y VARIABLES DE ESTADO ---
 if "pantalla" not in st.session_state:
     st.session_state.pantalla = "inicio"
+if "indice_curiosidad" not in st.session_state:
+    st.session_state.indice_curiosidad = 0
+if "esperando_afirmacion" not in st.session_state:
+    st.session_state.esperando_afirmacion = False
 
 # --- PANTALLA 1: INICIO ---
 if st.session_state.pantalla == "inicio":
-    # 1. LOGO CENTRADO ARRIBA
     col_a, col_logo, col_b = st.columns([1, 1.5, 1])
     with col_logo:
         try:
@@ -161,11 +172,9 @@ if st.session_state.pantalla == "inicio":
         except:
             pass
 
-    # 2. TÍTULOS
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # TRUCO DE BLINDAJE: Convertir tibu_idle.webp a base64 para meterla de forma segura al HTML
     tibu_html_tag = "🦈"
     try:
         with open("tibu_idle.webp", "rb") as image_file:
@@ -174,7 +183,6 @@ if st.session_state.pantalla == "inicio":
     except:
         pass
 
-    # 3. CUADRO DE INFO UTILIZANDO HTML PURO AL 100%
     st.markdown(f"""
     <div class="welcome-box">
         <div class="tibu-container">
@@ -187,7 +195,6 @@ if st.session_state.pantalla == "inicio":
     </div>
     """, unsafe_allow_html=True)
 
-    # 4. BOTÓN CON DOBLE FILTRO DE CENTRADO (CSS Avanzado + Columnas Python)
     col_l, col_btn, col_r = st.columns([1, 2, 1])
     with col_btn:
         if st.button("¡Empezar a Chatear! 🚀"):
@@ -203,6 +210,8 @@ elif st.session_state.pantalla == "chat":
     with col_reset:
         if st.button("🗑️ Reset"):
             st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres platicar?"}]
+            st.session_state.indice_curiosidad = 0
+            st.session_state.esperando_afirmacion = False
             st.rerun()
 
     if "messages" not in st.session_state:
@@ -212,29 +221,65 @@ elif st.session_state.pantalla == "chat":
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-    # Botones rápidos
+    # BOTONES RÁPIDOS
     col1, col2 = st.columns(2)
     pregunta_sugerida = None
+    disparar_curiosidad = False
+
     with col1:
-        if st.button("📜 Historia"): pregunta_sugerida = "¿Quién fundó el ICEST?"
+        if st.button("📜 Oferta Educativa"): 
+            pregunta_sugerida = "¿Cuál es la oferta educativa completa del ICEST?"
     with col2:
-        if st.button("✨ Curiosidad"): pregunta_sugerida = "¡Cuéntame algo curioso!"
+        if st.button("✨ Curiosidad"): 
+            disparar_curiosidad = True
 
     captura = st.chat_input("Escribe tu pregunta...")
     user_input = captura if captura else pregunta_sugerida
 
-    if user_input:
-        st.session_state.messages.append({"role": "user", "content": user_input})
-        with st.chat_message("user"): st.write(user_input)
-
-        client = Groq(api_key=API_KEY_EXPO)
-        with st.spinner("🤖 Tibu pensando..."):
-            response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=[{"role": "system", "content": SYSTEM_PROMPT}] + st.session_state.messages
-            )
-            respuesta = response.choices[0].message.content
+    # LÓGICA DE DATOS CURIOSOS
+    if disparar_curiosidad:
+        idx = st.session_state.indice_curiosidad
+        dato = CURIOSIDADES[idx]
+        st.session_state.messages.append({"role": "user", "content": "¡Cuéntame algo curioso!"})
         
-        with st.chat_message("assistant"): st.write(respuesta)
-        st.session_state.messages.append({"role": "assistant", "content": respuesta})
+        sig_idx = (idx + 1) % len(CURIOSIDADES)
+        st.session_state.indice_curiosidad = sig_idx
+        
+        respuesta_tibu = f"{dato} 🤩 ¿Te gustaría que te cuente otro dato curioso o prefieres preguntar algo más?"
+        st.session_state.messages.append({"role": "assistant", "content": respuesta_tibu})
+        st.session_state.esperando_afirmacion = True
         st.rerun()
+
+    elif user_input:
+        # Si el bot estaba esperando saber si querías más datos curiosos
+        if st.session_state.esperando_afirmacion and user_input.lower() in ["si", "sí", "obvio", "va", "otro", "cuéntame otro", "cuenta otro"]:
+            st.session_state.esperando_afirmacion = False
+            idx = st.session_state.indice_curiosidad
+            dato = CURIOSIDADES[idx]
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            
+            sig_idx = (idx + 1) % len(CURIOSIDADES)
+            st.session_state.indice_curiosidad = sig_idx
+            
+            respuesta_tibu = f"{dato} 🦈 ¿Quieres otra curiosidad?"
+            st.session_state.messages.append({"role": "assistant", "content": respuesta_tibu})
+            st.session_state.esperando_afirmacion = True
+            st.rerun()
+        else:
+            st.session_state.esperando_afirmacion = False
+            st.session_state.messages.append({"role": "user", "content": user_input})
+            with st.chat_message("user"): 
+                st.write(user_input)
+
+            client = Groq(api_key=API_KEY_EXPO)
+            with st.spinner("🤖 Tibu pensando..."):
+                response = client.chat.completions.create(
+                    model="llama-3.3-70b-versatile",
+                    messages=[{"role": "system", "content": SYSTEM_PROMPT}] + st.session_state.messages
+                )
+                respuesta = response.choices[0].message.content
+            
+            with st.chat_message("assistant"): 
+                st.write(respuesta)
+            st.session_state.messages.append({"role": "assistant", "content": respuesta})
+            st.rerun()
