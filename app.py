@@ -188,7 +188,7 @@ if st.session_state.pantalla == "inicio":
             pass
     with col_logo2:
         try:
-            st.image("tibu_idle.png", caption="", width=150)
+            st.image("tibu_idle.webp", caption="", width=150)
         except:
             pass
 
