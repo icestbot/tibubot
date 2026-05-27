@@ -173,7 +173,7 @@ La familia ICEST respalda su calidad educativa con proyectos de alto impacto com
 # --- INSTRUCCIONES DEL CHATBOT ---
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
-Tu objetivo es dar información sobre el ICEST usando estos datos: {CONTEXTO_COMPLETO}.
+Tu objetivo es dar información sobre el ICEST usando estos datos: {HISTORIA_ICEST}.
 
 REGLAS DE ACTITUD REQUERIDAS:
 1. Actúa de forma natural, amigable y conversacional. No suenes robótico ni aburrido.
