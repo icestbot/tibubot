@@ -168,8 +168,6 @@ HOSPITAL Y MUSEO:
 La familia ICEST respalda su calidad educativa con proyectos de alto impacto como el Hospital San Juan Pablo II (complejo médico de alta tecnología para la práctica de sus alumnos) y el Museo del Automóvil y el Transporte en Tampico, que alberga una de las colecciones de autos históricos más importantes de todo México.
 """
 
-INFO_EXTRA = """
-
 
 CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
 
@@ -240,7 +238,7 @@ if st.session_state.pantalla == "inicio":
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
         <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
     </div>
-    """, (unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     st.markdown('<div class="btn-inicio">', unsafe_allow_html=True)
     if st.button("¡Empezar a Chatear! 🚀"):
