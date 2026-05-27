@@ -169,7 +169,6 @@ La familia ICEST respalda su calidad educativa con proyectos de alto impacto com
 """
 
 
-CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
 
 # --- INSTRUCCIONES DEL CHATBOT ---
 SYSTEM_PROMPT = f"""
