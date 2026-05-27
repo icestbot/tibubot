@@ -240,7 +240,7 @@ if st.session_state.pantalla == "inicio":
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
         <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
     </div>
-    """, unsafe_allow_html=True)
+    """, (unsafe_allow_html=True)
 
     st.markdown('<div class="btn-inicio">', unsafe_allow_html=True)
     if st.button("¡Empezar a Chatear! 🚀"):
