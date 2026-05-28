@@ -157,13 +157,12 @@ elif st.session_state.pantalla == "chat":
                 st.session_state.indice_curiosidad = (st.session_state.indice_curiosidad + 1) % len(CURIOSIDADES)
             else:
                 with st.spinner("🤖 Buscando..."):
-                    # Mapear roles para Cohere (system, user, assistant)
                     chat_history = [{"role": "system", "content": SYSTEM_PROMPT}]
                     for m in st.session_state.messages[-4:]:
                         chat_history.append({"role": m["role"], "content": m["content"]})
                     
                     response = co.chat(
-                        model="command-r",
+                        model="command-r-plus",  # Modelo moderno y activo
                         messages=chat_history
                     )
                     respuesta_robot = response.message.content
