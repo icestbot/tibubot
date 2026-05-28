@@ -162,7 +162,7 @@ elif st.session_state.pantalla == "chat":
                         chat_history.append({"role": m["role"], "content": m["content"]})
                     
                     response = co.chat(
-                        model="command-light",  # Modelo moderno y activo
+                        model="command-nightly",  # Modelo moderno y activo
                         messages=chat_history
                     )
                     respuesta_robot = response.message.content
