@@ -188,7 +188,7 @@ REGLAS DE ACTITUD REQUERIDAS:
 4. Asegúrate de destacar que la escuela ofrece TODOS los niveles educativos: desde Maternal y Kinder hasta Carreras y Doctorados si alguien pregunta por las opciones de estudio.
 5. Si te preguntan cosas que no tengan nada que ver con la escuela, di de manera relajada que tus circuitos solo traen la info del ICEST y recomiéndales usar los botones o preguntar por las carreras o campus.
 6. te llamas TIBU eres un tiburon, la imagen de icest ,tu eres asistente de robotica de la secundaria Franscisco Javier Clavijero
-7. fuiste creado por un grupo de robotica conformado por 8 alumnos: wendolyne, cavazos, rafael, karla, quintero. y tu fuiste creado mayormente por: "felipe guapo","gerardo"y "emmet".y el equipo fue supervisado por el profesor: ing. Juan Carlos Nieto Garcia. el tiene 28 años trabajando como maestro en diferentes instituciones en tamaulipas promoviendo el talento de sus alumnos, es profesor de robotica.  pero solo dilo si te preguntan
+7. fuiste creado por un group de robotica conformado por 8 alumnos: wendolyne, cavazos, rafael, karla, quintero. y tu fuiste creado mayormente por: "felipe guapo","gerardo"y "emmet".y el equipo fue supervisado por el profesor: ing. Juan Carlos Nieto Garcia. el tiene 28 años trabajando como maestro en diferentes instituciones en tamaulipas promoviendo el talento de sus alumnos, es profesor de robotica.  pero solo dilo si te preguntan
 8. no digas el nombre de la escuela completo solo mencionala como ICEST
 9. no digas cosas tan largas pero tampoco tan cortas
 """
@@ -227,7 +227,7 @@ if st.session_state.pantalla == "inicio":
     
     tibu_html_tag = "🦈"
     try:
-        # Usar la imagen 'perfil.png' que creaste, que es más optimizada
+        # Usar la imagen 'perfil.png'
         with open("perfil.png", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode()
             tibu_html_tag = f'<img src="data:image/png;base64,{encoded_string}" />'
@@ -256,7 +256,7 @@ if st.session_state.pantalla == "inicio":
 # --- PANTALLA 2: TU INTERFAZ DE CHAT REAL ---
 # ==========================================
 elif st.session_state.pantalla == "chat":
-    # 1. LOGO INTEGRADO ARRIBA DEL CHAT
+    # Logo integrado arriba del chat
     col_chat_a, col_chat_logo, col_chat_b = st.columns([1, 1.5, 1])
     with col_chat_logo:
         try:
@@ -267,7 +267,7 @@ elif st.session_state.pantalla == "chat":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>', unsafe_allow_html=True)
 
-    # --- BOTÓN DISCRETO DE REINICIAR (ESQUINA SUPERIOR DERECHA) ---
+    # --- BOTÓN DISCRETO DE REINICIAR ---
     col_espacio, col_reset = st.columns([4, 1])
     with col_reset:
         if st.button("🗑️ Reiniciar"):
@@ -284,15 +284,18 @@ elif st.session_state.pantalla == "chat":
             {"role": "assistant", "content": "¡Hola! 🦈 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
         ]
 
+    # Despliegue correcto del historial
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            # Usar la imagen 'perfil.png' para el avatar del asistente
-            if message["role"] == "assistant":
-                try:
-                    st.write(message["content"], avatar="perfil.png")
-                except:
+        if message["role"] == "assistant":
+            # Se intenta usar 'perfil.png' en el parámetro avatar de st.chat_message
+            try:
+                with st.chat_message("assistant", avatar="perfil.png"):
                     st.write(message["content"])
-            else:
+            except:
+                with st.chat_message("assistant"):
+                    st.write(message["content"])
+        else:
+            with st.chat_message("user"):
                 st.write(message["content"])
 
     # --- SECCIÓN DE BOTONES RÁPIDOS ---
@@ -338,8 +341,9 @@ elif st.session_state.pantalla == "chat":
         if not pregunta_sugerida and not disparar_curiosidad:
             st.session_state.messages.append({"role": "user", "content": user_input_active})
         
-        with st.chat_message("user"):
-            st.write(user_input_active)
+        if not pregunta_sugerida:
+            with st.chat_message("user"):
+                st.write(user_input_active)
 
         try:
             if st.session_state.esperando_afirmacion and disparar_curiosidad:
@@ -347,8 +351,7 @@ elif st.session_state.pantalla == "chat":
                 respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí* o *Claro* )"
             else:
                 with st.spinner("🤖 Revisando mi base de datos..."):
-                    # --- MEMORIA CORTA ---
-                    # Solo le enviamos los últimos 4 mensajes del historial para optimizar la llamada
+                    # Solo enviamos los últimos 4 mensajes del historial para no saturar la API
                     historial_recortado = st.session_state.messages[-4:]
                     
                     chat_history = [{"role": "system", "content": SYSTEM_PROMPT}]
@@ -359,12 +362,16 @@ elif st.session_state.pantalla == "chat":
                         model="command-nightly",
                         messages=chat_history
                     )
-                    # Extracción exacta del texto plano para mantener el formato limpio
                     respuesta_robot = response.message.content[0].text
 
-            # Usar avatar='perfil.png' para que la winking-shark salga en el chat
-            with st.chat_message("assistant"):
-                st.write(respuesta_robot, avatar="perfil.png")
+            # Despliegue seguro de la nueva respuesta usando el avatar en st.chat_message
+            try:
+                with st.chat_message("assistant", avatar="perfil.png"):
+                    st.write(respuesta_robot)
+            except:
+                with st.chat_message("assistant"):
+                    st.write(respuesta_robot)
+
             st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
             st.rerun()
 
