@@ -177,6 +177,7 @@ INFORMACIÓN ADICIONAL DEL PROYECTO:
 CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA """
 INFORMACION SOBRE LOS MAESTROS:
 Acualmente en el campus clavijero hay un total de 18 profesores por ahora
+"""
 
 
 SYSTEM_PROMPT = f"""
