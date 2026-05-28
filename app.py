@@ -18,7 +18,7 @@ st.markdown("""
         background-color: #fafbfc !important;
     }
     
-    /* BLINDAJE CONTRA LETRAS INVISIBLES: Obliga a todo texto común a ser azul marino */
+    /* BLINDAJE CONTRA LETRAS INVISIBLES */
     .stApp p, .stApp span, .stApp label, .stApp li, .main-title, .sub-title, .stMarkdown div p, .welcome-box h3, .welcome-box p {
         color: #002b49 !important;
     }
@@ -77,7 +77,7 @@ st.markdown("""
         color: #ffffff !important;
     }
     
-    /* Efecto Hover (pasar el dedo o mouse) */
+    /* Efecto Hover */
     div.stButton > button:hover {
         background-color: #d4af37 !important;
         transform: scale(1.02);
@@ -134,6 +134,7 @@ st.markdown("""
     .tibu-container img {
         max-width: 180px;
         height: auto;
+        border-radius: 50%; /* Opcional: Hace que la imagen de inicio sea circular */
     }
 </style>
 """, unsafe_allow_html=True)
@@ -168,12 +169,17 @@ HOSPITAL Y MUSEO:
 La familia ICEST respalda su calidad educativa con proyectos de alto impacto como el Hospital San Juan Pablo II (complejo médico de alta tecnología para la práctica de sus alumnos) y el Museo del Automóvil y el Transporte en Tampico, que alberga una de las colecciones de autos históricos más importantes de todo México.
 """
 
+INFO_EXTRA = """
+INFORMACIÓN ADICIONAL DEL PROYECTO:
+- Puedes agregar aquí especificaciones de los circuitos, detalles del stand o cualquier dato de última hora que necesites.
+"""
 
+CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
 
 # --- INSTRUCCIONES DEL CHATBOT ---
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
-Tu objetivo es dar información sobre el ICEST usando estos datos: {HISTORIA_ICEST}.
+Tu objetivo es dar información sobre el ICEST usando estos datos: {CONTEXTO_COMPLETO}.
 
 REGLAS DE ACTITUD REQUERIDAS:
 1. Actúa de forma natural, amigable y conversacional. No suenes robótico ni aburrido.
@@ -182,7 +188,7 @@ REGLAS DE ACTITUD REQUERIDAS:
 4. Asegúrate de destacar que la escuela ofrece TODOS los niveles educativos: desde Maternal y Kinder hasta Carreras y Doctorados si alguien pregunta por las opciones de estudio.
 5. Si te preguntan cosas que no tengan nada que ver con la escuela, di de manera relajada que tus circuitos solo traen la info del ICEST y recomiéndales usar los botones o preguntar por las carreras o campus.
 6. te llamas TIBU eres un tiburon, la imagen de icest ,tu eres asistente de robotica de la secundaria Franscisco Javier Clavijero
-7. fuiste creado por un grupo de robotica conformado por 8 alumnos: wendolyne, cavazos, rafael, karla, quintero. y tu fuiste creado mayormente por: "felipe guapo","gerardo"y "emmet", y el equipo fue supervisado por el profesor: ing. Juan Carlos Nieto Garcia. el tiene 28 años trabajando como maestro en diferentes instituciones en tamaulipas promoviendo el talento de sus alumnos, es profesor de robotica.  pero solo dilo si te preguntan
+7. fuiste creado por un grupo de robotica conformado por 8 alumnos: wendolyne, cavazos, rafael, karla, quintero. y tu fuiste creado mayormente por: "felipe guapo","gerardo"y "emmet".y el equipo fue supervisado por el profesor: ing. Juan Carlos Nieto Garcia. el tiene 28 años trabajando como maestro en diferentes instituciones en tamaulipas promoviendo el talento de sus alumnos, es profesor de robotica.  pero solo dilo si te preguntan
 8. no digas el nombre de la escuela completo solo mencionala como ICEST
 9. no digas cosas tan largas pero tampoco tan cortas
 """
@@ -219,20 +225,27 @@ if st.session_state.pantalla == "inicio":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
+    # Aquí se carga la imagen principal de Tibu en la bienvenida
     tibu_html_tag = "🦈"
     try:
-        with open("tibu_idle.webp", "rb") as image_file:
+        with open("2125504733590500457.jpeg", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode()
-            tibu_html_tag = f'<img src="data:image/webp;base64,{encoded_string}" />'
+            tibu_html_tag = f'<img src="data:image/jpeg;base64,{encoded_string}" />'
     except:
-        pass
+        # Fallback por si acaso no encuentra el archivo nuevo, intenta con el viejo
+        try:
+            with open("tibu_idle.webp", "rb") as image_file:
+                encoded_string = base64.b64encode(image_file.read()).decode()
+                tibu_html_tag = f'<img src="data:image/webp;base64,{encoded_string}" />'
+        except:
+            pass
 
     st.markdown(f"""
     <div class="welcome-box">
         <div class="tibu-container">
             {tibu_html_tag}
         </div>
-        <h3>Bienvenido a la Experiencia TibuBot</h3>
+        <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
         <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
         <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
@@ -246,7 +259,7 @@ if st.session_state.pantalla == "inicio":
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ==========================================
-# --- PANTALLA 2: TU INTERFAZ DE CHAT REAL ---
+# --- PANTALLA 2: INTERFAZ DE CHAT REAL ---
 # ==========================================
 elif st.session_state.pantalla == "chat":
     # 1. LOGO INTEGRADO ARRIBA DEL CHAT
@@ -260,11 +273,11 @@ elif st.session_state.pantalla == "chat":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>', unsafe_allow_html=True)
 
-    # --- BOTÓN DISCRETO DE REINICIAR (ESQUINA SUPERIOR DERECHA) ---
+    # --- BOTÓN DISCRETO DE REINICIAR ---
     col_espacio, col_reset = st.columns([4, 1])
     with col_reset:
         if st.button("🗑️ Reiniciar"):
-            st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres que platicamos ahora?"}]
+            st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres que platiquamos ahora?"}]
             st.session_state.indice_curiosidad = 0
             st.session_state.esperando_afirmacion = False
             st.rerun()
@@ -277,9 +290,14 @@ elif st.session_state.pantalla == "chat":
             {"role": "assistant", "content": "¡Hola! 🦈 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
         ]
 
+    # Muestra el historial incorporando la nueva imagen de Tibu
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
+        if message["role"] == "assistant":
+            with st.chat_message("assistant", avatar="2125504733590500457.jpeg"):
+                st.write(message["content"])
+        else:
+            with st.chat_message("user", avatar="👤"):
+                st.write(message["content"])
 
     # --- SECCIÓN DE BOTONES RÁPIDOS ---
     st.write("⚡ **Preguntas Rápidas (Presiona un botón para probar):**")
@@ -319,18 +337,18 @@ elif st.session_state.pantalla == "chat":
             else:
                 st.session_state.esperando_afirmacion = False
 
-    # --- PROCESAMIENTO CON LA API DE GROQ ---
+    # --- PROCESAMIENTO CON LA API DE GROQ Y RESPUESTA EN VIVO ---
     if user_input_active:
         if not pregunta_sugerida and not disparar_curiosidad:
             st.session_state.messages.append({"role": "user", "content": user_input_active})
         
-        with st.chat_message("user"):
+        with st.chat_message("user", avatar="👤"):
             st.write(user_input_active)
 
         try:
             if st.session_state.esperando_afirmacion:
                 dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
-                respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí* o *Claro* )"
+                respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí* o *Claro*)"
             else:
                 client = Groq(api_key=API_KEY_EXPO)
                 with st.spinner("🤖 Revisando mi base de datos..."):
@@ -343,8 +361,10 @@ elif st.session_state.pantalla == "chat":
                     )
                     respuesta_robot = response.choices[0].message.content
 
-            with st.chat_message("assistant"):
+            # Aquí también se asigna el avatar de Tibu a la nueva respuesta generada
+            with st.chat_message("assistant", avatar="2125504733590500457.jpeg"):
                 st.write(respuesta_robot)
+                
             st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
             st.rerun()
 
