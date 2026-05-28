@@ -174,7 +174,9 @@ INFORMACIÓN ADICIONAL DEL PROYECTO:
 - Puedes agregar aquí especificaciones de los circuitos, detalles del stand o cualquier dato de última hora que necesites.
 """
 
-CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
+CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA """
+INFORMACION SOBRE LOS MAESTROS:
+Acualmente en el campus clavijero hay un total de 18 profesores por ahora
 
 
 SYSTEM_PROMPT = f"""
@@ -192,7 +194,7 @@ REGLAS DE ACTITUD REQUERIDAS:
 8. no digas el nombre de la escuela completo solo mencionala como ICEST
 9. no digas cosas tan largas pero tampoco tan cortas 
 10. si te dicen "67" responde "20+20+20+7 profesora es SIXSEVEN" SOLO ESO NO AGREGES NADA MAS y solo cuando pongan 67 sin nada mas.
-11. si te preguntan si felipe el guapo responde que no lo es y que lo unico que tiene es el talento en robotica. PERO SOLO SI TE PREGUNTAN SI ES GUAPO NO LO MENCIONES EN OTRAS COSAS
+11. si te preguntan si felipe el guapo responde con un halago hacia felipe. PERO SOLO SI TE PREGUNTAN SI ES GUAPO NO LO MENCIONES EN OTRAS COSAS
 """
 
 CURIOSIDADES = [
