@@ -1,5 +1,6 @@
 import streamlit as st
-from groq import Groq
+from google import genai
+from google.genai import types
 import base64
 
 # --- CONFIGURACIÓN DE PÁGINA (ESTILO PROFESIONAL) ---
@@ -139,8 +140,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- CLAVE API LEYENDO DESDE STREAMLIT SECRETS ---
-API_KEY_EXPO = st.secrets["API_KEY_EXPO"] 
+# --- INSTANCIAR CLIENTE DE GEMINI ---
+client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 # --- BASE DE DATOS DE CONOCIMIENTOS ---
 HISTORIA_ICEST = """
@@ -151,7 +152,7 @@ CAMPUS Y COBERTURA:
 Cuenta con campus estratégicos en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), además de extensiones en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México. También cuenta con un fuerte ecosistema de Educación a Distancia (Online).
 
 POLITICA DE CALIDAD:
-El Instituto de Ciencias y Estudios Superiores de Tamaulipas, A. C., es un sistema educativo comprometido en ofrecer un servicio de calidad en la formación integral del estudiante, mediante una atención personalizada, orientada al desarrollo humano y la formación en valores, infraestructura funcional y docentes capacitados, buscando siempre la satisfacción de nuestros alumnos, padres de familia, maestros y demás colaboradores, a través de un sistema de gestión de calidad, con procesos definidos que garantizan la provisión de servicios de administración de políticas y normatividades del sector educativo, su gestión y mejora sistemática, para aumentar nuestra participación en la sociedad y trascender en la misma.
+El Instituto de Ciencias y Estudios Superiores de Tamaulipas, A. C., es un sistema educativo comprometido en ofrecer un servicio de calidad en la formación integral del estudiante, mediante una atención personalizada, orientada al desarrollo humano y la formación en valores, infraestructura funcional and docentes capacitados, buscando siempre la satisfacción de nuestros alumnos, padres de familia, maestros y demás colaboradores, a través de un sistema de gestión de calidad, con procesos definidos que garantizan la provisión de servicios de administración de políticas y normatividades del sector educativo, su gestión y mejora sistemática, para aumentar nuestra participación en la sociedad y trascender en la misma.
 
 OFERTA EDUCATIVA COMPLETA:
 El ICEST ofrece un modelo educativo integral desde las etapas tempranas hasta el nivel profesional:
@@ -174,10 +175,9 @@ INFORMACIÓN ADICIONAL DEL PROYECTO:
 - Puedes agregar aquí especificaciones de los circuitos, detalles del stand o cualquier dato de última hora que necesites.
 """
 
-CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA 
+CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
 
-
-
+# --- INSTRUCCIONES DEL SYSTEM PROMPT ---
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
 Tu objetivo es dar información sobre el ICEST usando estos datos: {CONTEXTO_COMPLETO}.
@@ -191,9 +191,7 @@ REGLAS DE ACTITUD REQUERIDAS:
 6. te llamas TIBU eres un tiburon, la imagen de icest ,tu eres asistente de robotica de la secundaria Franscisco Javier Clavijero
 7. fuiste creado por un grupo de robotica conformado por 8 alumnos: wendolyne, cavazos, rafael, karla, quintero. y tu fuiste creado mayormente por: "felipe guapo","gerardo"y "emmet".y el equipo fue supervisado por el profesor: ing. Juan Carlos Nieto Garcia. el tiene 28 años trabajando como maestro en diferentes instituciones en tamaulipas promoviendo el talento de sus alumnos, es profesor de robotica.  pero solo dilo si te preguntan
 8. no digas el nombre de la escuela completo solo mencionala como ICEST
-9. no digas cosas tan largas pero tampoco tan cortas 
-10. si te dicen "67" responde "20+20+20+7 profesora es SIXSEVEN" SOLO ESO NO AGREGES NADA MAS y solo cuando pongan 67 sin nada mas.
-11. si te preguntan si felipe el guapo responde con un halago hacia felipe. PERO SOLO SI TE PREGUNTAN SI ES GUAPO NO LO MENCIONES EN OTRAS COSAS
+9. no digas cosas tan largas pero tampoco tan cortas
 """
 
 CURIOSIDADES = [
@@ -217,7 +215,6 @@ if "esperando_afirmacion" not in st.session_state:
 # --- PANTALLA 1: INICIO (CON TIBU SEGURO) ---
 # ==========================================
 if st.session_state.pantalla == "inicio":
-    # Logo centrado
     col_a, col_logo, col_b = st.columns([1, 1.5, 1])
     with col_logo:
         try:
@@ -228,7 +225,6 @@ if st.session_state.pantalla == "inicio":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # Carga de la imagen de bienvenida usando perfil.png
     tibu_html_tag = "🦈"
     try:
         with open("perfil.png", "rb") as image_file:
@@ -245,8 +241,7 @@ if st.session_state.pantalla == "inicio":
         <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
         <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
-        <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">desarrollado por: Equipo de robotica, Felipe, Gerardo y Emmet.
-        Supervisador por: profesor Juan carlos </p>
+        <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -260,7 +255,6 @@ if st.session_state.pantalla == "inicio":
 # --- PANTALLA 2: INTERFAZ DE CHAT REAL ---
 # ==========================================
 elif st.session_state.pantalla == "chat":
-    # 1. LOGO INTEGRADO ARRIBA DEL CHAT
     col_chat_a, col_chat_logo, col_chat_b = st.columns([1, 1.5, 1])
     with col_chat_logo:
         try:
@@ -271,26 +265,25 @@ elif st.session_state.pantalla == "chat":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Asistente Virtual - Expo de Robótica</div>', unsafe_allow_html=True)
 
-    # --- BOTÓN DISCRETO DE REINICIAR ---
     col_espacio, col_reset = st.columns([4, 1])
     with col_reset:
         if st.button("🗑️ Reiniciar"):
-            st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres que platicamos ahora?"}]
+            st.session_state.messages = [{"role": "model", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres que platiquamos ahora?"}]
             st.session_state.indice_curiosidad = 0
             st.session_state.esperando_afirmacion = False
             st.rerun()
 
     st.write("¡Bienvenido! Ven a chatear conmigo en tiempo real. Descubre la historia, los campus y los datos más interesantes de nuestra escuela.")
 
-    # --- MEMORIA INTEGRADA DEL CHAT ---
+    # --- MEMORIA INTEGRADA DEL CHAT (Adaptada a roles de Gemini) ---
     if "messages" not in st.session_state:
         st.session_state.messages = [
-            {"role": "assistant", "content": "¡Hola! 🦈 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
+            {"role": "model", "content": "¡Hola! 🦈 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
         ]
 
-    # Muestra el historial incorporando perfil.png como avatar del asistente
+    # Renderizado del historial con perfil.png
     for message in st.session_state.messages:
-        if message["role"] == "assistant":
+        if message["role"] == "model":
             with st.chat_message("assistant", avatar="perfil.png"):
                 st.write(message["content"])
         else:
@@ -335,7 +328,7 @@ elif st.session_state.pantalla == "chat":
             else:
                 st.session_state.esperando_afirmacion = False
 
-    # --- PROCESAMIENTO CON LA API DE GROQ Y RESPUESTA EN VIVO ---
+    # --- PROCESAMIENTO CON LA API ILIMITADA DE GEMINI ---
     if user_input_active:
         if not pregunta_sugerida and not disparar_curiosidad:
             st.session_state.messages.append({"role": "user", "content": user_input_active})
@@ -348,22 +341,31 @@ elif st.session_state.pantalla == "chat":
                 dato_actual = CURIOSIDADES[st.session_state.indice_curiosidad]
                 respuesta_robot = f"🤖 **¡Checa este dato!**\n\n{dato_actual}\n\n¿Te gustaría conocer otra curiosidad de la escuela? (Escribe *Sí* o *Claro*)"
             else:
-                client = Groq(api_key=API_KEY_EXPO)
-                with st.spinner("🤖 Revisando mi base de datos..."):
-                    response = client.chat.completions.create(
-                        model="llama-3.3-70b-versatile",
-                        messages=[
-                            {"role": "system", "content": SYSTEM_PROMPT},
-                            {"role": "user", "content": user_input_active}
-                        ],
+                with st.spinner("🤖 Tibu pensando en los servidores de Google..."):
+                    # Formateamos el historial completo para Gemini
+                    contents_gemini = []
+                    for m in st.session_state.messages:
+                        contents_gemini.append(
+                            types.Content(
+                                role=m["role"],
+                                parts=[types.Part.from_text(text=m["content"])]
+                            )
+                        )
+                    
+                    # Llamada directa al modelo flash ultrarrápido e ilimitado
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=contents_gemini,
+                        config=types.GenerateContentConfig(
+                            system_instruction=SYSTEM_PROMPT,
+                        ),
                     )
-                    respuesta_robot = response.choices[0].message.content
+                    respuesta_robot = response.text
 
-            # Asignación de perfil.png a las respuestas del bot en tiempo real
             with st.chat_message("assistant", avatar="perfil.png"):
                 st.write(respuesta_robot)
                 
-            st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
+            st.session_state.messages.append({"role": "model", "content": respuesta_robot})
             st.rerun()
 
         except Exception as e:
