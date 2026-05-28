@@ -242,7 +242,8 @@ if st.session_state.pantalla == "inicio":
         <h3>¡Bienvenido a la Experiencia TibuBot!</h3>
         <p>Hola, soy <b>Tibu</b>, tu asistente de Inteligencia Artificial para esta Expo de Robótica.</p>
         <p>Estoy aquí para contarte todo sobre el <b>ICEST</b>, nuestra historia, campus y opciones de estudio desde maternal hasta posgrados.</p>
-        <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">Equipo de desarrollo: Felipe, Gerardo y Emmet.</p>
+        <p style="font-size: 13px; color: #4682B4; margin-top: 15px; font-weight: bold;">desarrollado por: Equipo de robotica, Felipe, Gerardo y Emmet.
+        Supervisador por: profesor Juan carlos </p>
     </div>
     """, unsafe_allow_html=True)
 
