@@ -175,7 +175,7 @@ INFORMACIÓN ADICIONAL DEL PROYECTO:
 """
 
 CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
-"""
+
 
 SYSTEM_PROMPT = f"""
 Eres "Tibu", un asistente virtual genial, buena onda y muy inteligente programado por un equipo de estudiantes para esta Expo de Robótica.
