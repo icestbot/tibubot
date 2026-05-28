@@ -134,7 +134,7 @@ st.markdown("""
     .tibu-container img {
         max-width: 180px;
         height: auto;
-        border-radius: 50%; /* Opcional: Hace que la imagen de inicio sea circular */
+        border-radius: 50%;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -225,20 +225,14 @@ if st.session_state.pantalla == "inicio":
     st.markdown('<div class="main-title">🦈 TIBUBOT 🦈</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-title">Secundaria Francisco Javier Clavijero</div>', unsafe_allow_html=True)
     
-    # Aquí se carga la imagen principal de Tibu en la bienvenida
+    # Carga de la imagen de bienvenida usando perfil.png
     tibu_html_tag = "🦈"
     try:
-        with open("2125504733590500457.jpeg", "rb") as image_file:
+        with open("perfil.png", "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode()
-            tibu_html_tag = f'<img src="data:image/jpeg;base64,{encoded_string}" />'
+            tibu_html_tag = f'<img src="data:image/png;base64,{encoded_string}" />'
     except:
-        # Fallback por si acaso no encuentra el archivo nuevo, intenta con el viejo
-        try:
-            with open("tibu_idle.webp", "rb") as image_file:
-                encoded_string = base64.b64encode(image_file.read()).decode()
-                tibu_html_tag = f'<img src="data:image/webp;base64,{encoded_string}" />'
-        except:
-            pass
+        pass
 
     st.markdown(f"""
     <div class="welcome-box">
@@ -277,7 +271,7 @@ elif st.session_state.pantalla == "chat":
     col_espacio, col_reset = st.columns([4, 1])
     with col_reset:
         if st.button("🗑️ Reiniciar"):
-            st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres que platiquamos ahora?"}]
+            st.session_state.messages = [{"role": "assistant", "content": "¡Todo listo de nuevo! 🤖 ¿De qué quieres que platicamos ahora?"}]
             st.session_state.indice_curiosidad = 0
             st.session_state.esperando_afirmacion = False
             st.rerun()
@@ -290,10 +284,10 @@ elif st.session_state.pantalla == "chat":
             {"role": "assistant", "content": "¡Hola! 🦈 Me llamo Tibu y fui programado por el equipo de robótica para ayudarte a conocer todo sobre nuestra escuela. ¿Qué te gustaría saber primero? Puedes usar los botones de abajo o escribirme lo que quieras."}
         ]
 
-    # Muestra el historial incorporando la nueva imagen de Tibu
+    # Muestra el historial incorporando perfil.png como avatar del asistente
     for message in st.session_state.messages:
         if message["role"] == "assistant":
-            with st.chat_message("assistant", avatar="2125504733590500457.jpeg"):
+            with st.chat_message("assistant", avatar="perfil.png"):
                 st.write(message["content"])
         else:
             with st.chat_message("user", avatar="👤"):
@@ -361,8 +355,8 @@ elif st.session_state.pantalla == "chat":
                     )
                     respuesta_robot = response.choices[0].message.content
 
-            # Aquí también se asigna el avatar de Tibu a la nueva respuesta generada
-            with st.chat_message("assistant", avatar="2125504733590500457.jpeg"):
+            # Asignación de perfil.png a las respuestas del bot en tiempo real
+            with st.chat_message("assistant", avatar="perfil.png"):
                 st.write(respuesta_robot)
                 
             st.session_state.messages.append({"role": "assistant", "content": respuesta_robot})
