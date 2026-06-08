@@ -172,6 +172,10 @@ La familia ICEST respalda su calidad educativa con proyectos de alto impacto com
 INFO_EXTRA = """
 INFORMACIÓN ADICIONAL DEL PROYECTO:
 - Puedes agregar aquí especificaciones de los circuitos, detalles del stand o cualquier dato de última hora que necesites.
+- la secundaria cuenta con las materias de : español, ingles, tecnologia, robotica, matematicas, historia, geografia, tutoria y integracion curricular, formacion civica y etica, educacion fisica, ciencias, artes (dancistica y artistica). solo esas en secundaria icest pinos
+- cuenta con actividades extracurriculares como: ajedrez, volleyball, basketball, football americano, tochito flag, volleyball playa, atletismo, futbol, danza moderna, danza folklorica, teatro, coro, taekwondo, y instrumentos como: teclado, flauta, saxofon, guitarra, percusiones, trompeta.
+- la directora de la escuela icest secundaria tecnica franscisco javier clavijero es: jenny gomez crespo 
+-
 """
 
 CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
