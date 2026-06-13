@@ -148,7 +148,7 @@ El Instituto de Ciencias y Estudios Superiores de Tamaulipas (ICEST) fue fundado
 La rectora actual es la Mtra. Sandra L. Ávila Ramírez y su lema oficial es: "Calidad en educación a tu alcance".
 
 CAMPUS Y COBERTURA:
-Cuenta con campus estratégicos en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), además de extensiones en Veracruz, San Luis Potosí, Nuevo León, Michoacán y el Estado de México. También cuenta con un fuerte ecosistema de Educación a Distancia (Online).
+Cuenta con campus estratégicos en Tampico (como Campus Tampico 2000, Campus Los Pinos, Campus Madero), además de extensiones en Estados como: CDMX, Hidalgo, Michoacán, Nuevo León, San Luis Potosí, Tabasco, Tamaulipas, Veracruz, Yucatán. También cuenta con un fuerte ecosistema de Educación a Distancia (Online).
 
 POLITICA DE CALIDAD:
 El Instituto de Ciencias y Estudios Superiores de Tamaulipas, A. C., es un sistema educativo comprometido en ofrecer un servicio de calidad en la formación integral del estudiante, mediante una atención personalizada, orientada al desarrollo humano y la formación en valores, infraestructura funcional and docentes capacitados, buscando siempre la satisfacción de nuestros alumnos, padres de familia, maestros y demás colaboradores, a través de un sistema de gestión de calidad, con procesos definidos que garantizan la provisión de servicios de administración de políticas y normatividades del sector educativo, su gestión and mejora sistemática, para aumentar nuestra participación en la sociedad y trascender en la misma.
@@ -173,9 +173,19 @@ INFO_EXTRA = """
 INFORMACIÓN ADICIONAL DEL PROYECTO:
 - Puedes agregar aquí especificaciones de los circuitos, detalles del stand o cualquier dato de última hora que necesites.
 - la secundaria cuenta con las materias de : español por:PROF. FLORENCIO HERNÁNDEZ EPIGMENIO. ingles por:PROFA. MARTHA PATRICIA ARTEAGA PÉREZ. tecnologia por:PROF. OSCAR ALEJANDRO PÉREZ JIMÉNEZ pera primer año y PROFA CONCEPCIÓN ZARAGOZA ESPINOSA para segundo y tercer año. robotica por:ing. Juan Carlos Nieto Garcia. matematicas por:PROF. OSCAR ALEJANDRO PÉREZ JIMÉNEZ. historia por:PROF. VICTOR MANUEL RANGEL. geografia:PROF. VICTOR MANUEL RANGEL. tutoria y integracion curricular POR: MAESTRO ASIGNADO A CADA GRUPO. formacion civica y etica:PROFA. ALONDRA MANZANO RAMIREZ. educacion fisica por:PROF. MARIO HUMBERTO SANTACRUZ ARTEAGA. ciencias por:PROFA. TATIANA ARLETTE LÓPEZ ARTEAGA. artes (dancistica y artistica) por:PROFA. NOHEMI ZAZIL BURGOS SANCHEZ. solo esas en secundaria icest pinos no nombres a los maestros solo si lo preguntan.
-- cuenta con actividades extracurriculares como: ajedrez, volleyball, basketball, football americano, tochito flag, volleyball playa, atletismo, futbol, danza moderna, danza folklorica, teatro, coro, taekwondo, y instrumentos como: teclado, flauta, saxofon, guitarra, percusiones, trompeta.
+- cuenta con actividades extracurriculares como: Fútbol, Básquetbol, Voleibol, Voleibol de Playa, Tochito Flag, Fútbol Americano, Atletismo, Tae Kwon Do, Ajedrez, Animación, Baile Moderno. Actividades Culturales como: Marching Band, Iniciación Musical, Trompeta y Trombón, Canto, Flauta Transversal, Saxofón y Clarinete, Percusiones, Guitarra, Teatro y Danza Folklorica
 - la directora de la escuela icest secundaria tecnica franscisco javier clavijero es: jenny gomez crespo 
--
+- el icest se encuentra en esta ubicacion https://maps.app.goo.gl/6qZ2yV8UdR63HLre6  o en ICEST - Campus Los Pinos Dirección: Calle Sexta, No. 103, Col. Los Pinos, C. P. 89139, Tampico, Tam.
+- Recursos e Instalaciones: Aulas Confortables y Climatizadas, Centro de Cómputo, Laboratorios, Laboratorio de Robótica
+- Modelo Educativo ICEST: el Modelo Educativo es una guía para todos los colaboradores, principalmente para quienes transmiten los conocimientos, pero es igual de importante el enfoque y las metodologías que se aplican para cada etapa de la vida de las personas que conforman la comunidad académica del Instituto.
+- BECAS: Becas por perseverancia institucional:¿Cómo se obtiene? Se le otorga a todos los egresados ​​y que continúen sus estudios en el siguiente nivel al que hayan cursado. Becas por convenio: ¿Quiénes participan? Se brinda a los alumnos que son trabajadores o hijos de trabajadores de empresas u organismos y asociaciones públicas y privadas que tienen convenio con el Instituto. Estar inscrito y realizar el proceso de solicitud de beca en la Dirección de Campus, Escuela o Facultad. Entregar la documentación solicitada por la Dirección de Campus, Escuela o Facultad. Tener acreditadas todas las materias del plan de estudios.  Para hijos de egresado ICEST: Familia ICEST.  Se otorga a los hijos de los egresados ​​que hayan concluido la preparatoria, licenciatura y/o posgrado en el Instituto. Estar inscrito y realizar el proceso de solicitud de beca en la Dirección de Campus, Escuela o Facultad. Entregar la documentación solicitada por la Dirección de Campus, Escuela o Facultad. Tener acreditadas todas las materias del plan de estudios
+
+
+Estar inscrito y realizar el proceso de solicitud de beca en la Dirección de Campus, Escuela o Facultad
+Entregar la documentación solicitada por la Dirección de Campus, Escuela o Facultad
+Tener acreditadas todas las materias del plan de estudios
+
+La premisa central del Modelo Educativo ICEST se fundamenta en que la educación es un fenómeno social, con enfoque holístico y formación a lo largo de la vida.
 """
 
 CONTEXTO_COMPLETO = HISTORIA_ICEST + "\n" + INFO_EXTRA
